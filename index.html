@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fortnite Sprite Tracker</title>
+    
+    <link rel="icon" type="image/png" href="staticsprite.png">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700;900&display=swap" rel="stylesheet">
@@ -68,12 +71,27 @@
             gap: 15px;
         }
 
+        /* Flex Layout Alignment for Brand Identity Container */
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        /* Inline Header Decorative Mascot Scaling Properties */
+        .brand-mascot {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));
+        }
+
         .brand-title {
             font-size: 38px;
             font-weight: 900;
             font-style: italic;
             text-shadow: 2px 2px 0px #000;
-            flex-shrink: 0;
         }
 
         .nav-controls-right {
@@ -261,11 +279,6 @@
             border-color: var(--fn-neon-cyan);
         }
 
-        .switch-input#compressed-grid-switch:checked {
-            background: var(--fn-yellow);
-            border-color: var(--fn-yellow);
-        }
-
         .switch-input::before {
             content: '';
             position: absolute;
@@ -294,39 +307,18 @@
             font-style: italic;
         }
 
-        .creator-img-container {
-            width: 50%;
-            margin: 0 auto 10px auto;
-            border: 2px solid var(--fn-border);
-            border-radius: 6px;
-            overflow: hidden;
-            transition: border-color 0.15s;
-            background: #0e1117;
-            display: block;
-        }
-
-        .creator-img-container:hover {
-            border-color: #ff0000;
-        }
-
         .creator-link {
             display: block;
             text-decoration: none;
             border: 2px solid var(--fn-border);
             border-radius: 6px;
             overflow: hidden;
-            transition: background 0.15s, border-color 0.15s;
+            transition: border-color 0.15s;
             background: #0e1117;
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: 700;
-            padding: 10px;
-            cursor: pointer;
         }
 
         .creator-link:hover {
             border-color: #ff0000;
-            background: rgba(255, 0, 0, 0.1);
         }
 
         .creator-img {
@@ -360,6 +352,7 @@
             aspect-ratio: 1 / 1.18;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
             transition: transform 0.15s, border-color 0.15s;
             transform: translate3d(0, 0, 0);
@@ -368,7 +361,6 @@
         .sprite-card:hover {
             transform: translate3d(0, -4px, 0);
             border-color: #ffffff;
-            z-index: 10;
         }
 
         /* Rarity Background Mapping Loops */
@@ -497,31 +489,20 @@
         .sprite-card.rarity-Mythic .fortnite-rarity-tag { background: var(--color-Mythic); color: var(--text-Mythic); }
         .sprite-card.rarity-Special .fortnite-rarity-tag { background: var(--color-Special); color: var(--text-Special); }
 
-        /* Footer Style Overhaul with Auto-scaling Typography layout */
+        /* Footer Style Overhaul with Centered Alignment */
         .card-title-footer {
             font-size: 13px;
             font-weight: 700;
             text-align: center;
             padding: 6px 4px;
             color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             z-index: 3;
             position: relative;
             background-color: rgba(15, 20, 29, 0.9);
             border-top: 1px solid rgba(255,255,255,0.06);
-            
-            /* Dynamic Scaler Properties */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .card-title-footer span {
-            display: inline-block;
-            max-width: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         /* Underlay colored base borders */
@@ -554,54 +535,6 @@
             color: #fff;
             margin-left: 10px;
         }
-
-        /* Compressed Alternatives Variant Layout Modifications */
-        .alt-variants-tray {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            display: flex;
-            flex-direction: column; 
-            gap: 4px;
-            z-index: 8;
-        }
-
-        .alt-variant-pin {
-            width: 24px;
-            height: 24px;
-            border: 1.5px solid #1a2233;
-            cursor: pointer;
-            position: relative;
-            background-size: cover;
-            background-position: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .alt-variant-pin.obtained-pin {
-            border-color: var(--fn-lime);
-            box-shadow: 0 0 6px var(--fn-lime);
-        }
-
-        /* Popout Layout Customizations for In-Place Scaling Expansion */
-        .alt-preview-popout {
-            position: absolute;
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%) scale(0.1);
-            transform-origin: right center; 
-            width: 154px; 
-            height: 181px;
-            z-index: 15;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.15s ease, transform 0.15s ease;
-        }
-
-        .alt-variant-pin:hover .alt-preview-popout {
-            opacity: 1;
-            transform: translateY(-50%) scale(1); 
-            pointer-events: auto;
-        }
     </style>
     
     <script src="sprites-data.js"></script>
@@ -610,7 +543,10 @@
 
 <div class="container">
     <header class="fn-navbar">
-        <div class="brand-title">FORTNITE SPRITES TRACKER</div>
+        <div class="brand-container">
+            <img src="staticsprite.png" alt="Mascot" class="brand-mascot">
+            <div class="brand-title">FORTNITE SPRITES TRACKER</div>
+        </div>
         <div class="nav-controls-right">
             <div class="live-progress-box">
                 <div class="live-progress-text">PROGRESS: <span id="live-counter-ratio">0 / 0</span></div>
@@ -654,11 +590,6 @@
                 </div>
 
                 <div class="switch-row">
-                    <span class="switch-label">COMPRESSED GRID MODE</span>
-                    <input type="checkbox" id="compressed-grid-switch" class="switch-input">
-                </div>
-
-                <div class="switch-row">
                     <span class="switch-label">SHOW UNRELEASED</span>
                     <input type="checkbox" id="unreleased-switch" class="switch-input">
                 </div>
@@ -671,11 +602,8 @@
 
             <div class="panel-box creator-card">
                 <div class="creator-title">MADE BY RICK</div>
-                <a href="https://www.youtube.com/@rickventure" target="_blank" class="creator-img-container">
-                    <img src="rickpfpeak.png" alt="Subscribe 2 Me" class="creator-img">
-                </a>
                 <a href="https://www.youtube.com/@rickventure" target="_blank" class="creator-link">
-                    SUBSCRIBE 2 ME
+                    <img src="rickpfpeak.png" alt="Subscribe 2 Me" class="creator-img">
                 </a>
                 <div class="creator-subtext">
                     Help me get a creator code at 1000 subs.
@@ -751,7 +679,6 @@
     const themeFilter = document.getElementById('theme-filter');
     const unreleasedSwitch = document.getElementById('unreleased-switch');
     const lowFidelitySwitch = document.getElementById('low-fidelity-switch');
-    const compressedGridSwitch = document.getElementById('compressed-grid-switch');
     const shareBtn = document.getElementById('shareBtn');
     const imageBtn = document.getElementById('imageBtn');
     
@@ -784,10 +711,6 @@
         }
     });
 
-    compressedGridSwitch.addEventListener('change', () => {
-        renderGrid();
-    });
-
     function updateCollectionCounter() {
         if (typeof baseSprites === 'undefined') return;
         const totalReleased = baseSprites.filter(sprite => !sprite.unreleased).length;
@@ -796,38 +719,6 @@
         liveRatio.textContent = `${collectedReleased} / ${totalReleased}`;
         const percentage = totalReleased > 0 ? (collectedReleased / totalReleased) * 100 : 0;
         liveBarFill.style.width = `${percentage}%`;
-    }
-
-    function adjustCardFontSizes() {
-        document.querySelectorAll('.card-title-footer span').forEach(span => {
-            const parent = span.parentElement;
-            let currentSize = 13; 
-            span.style.fontSize = currentSize + 'px';
-            
-            while (span.scrollWidth > parent.clientWidth && currentSize > 8) {
-                currentSize -= 0.5;
-                span.style.fontSize = currentSize + 'px';
-            }
-        });
-    }
-
-    function buildCardHTML(sprite, isObtained) {
-        const itemRarity = sprite.rarity || 'Rare';
-        const unreleasedBadge = sprite.unreleased ? `<div class="status-badge unreleased">UNRELEASED</div>` : '';
-        const collectedBadge = isObtained ? `<div class="status-badge collected">COLLECTED</div>` : '';
-        const displayRarityText = itemRarity === 'Mythic' ? 'MYTHIC' : itemRarity;
-        const rarityBadge = `<div class="fortnite-rarity-tag">${displayRarityText}</div>`;
-        const inferredImagePath = `sprites/${sprite.id}.png`;
-
-        return `
-            ${unreleasedBadge}
-            ${collectedBadge}
-            <div class="card-inner-display">
-                <img src="${inferredImagePath}" class="sprite-img" alt="${sprite.name}" onerror="this.src='https://placehold.co/150?text=Missing+File'">
-                ${rarityBadge}
-            </div>
-            <div class="card-title-footer"><span>${sprite.name}</span></div>
-        `;
     }
 
     function renderGrid() {
@@ -843,121 +734,62 @@
         const searchQuery = searchInput.value.toLowerCase();
         const selectedTheme = themeFilter.value;
         const showUnreleased = unreleasedSwitch.checked;
-        const isCompressedMode = compressedGridSwitch.checked;
 
-        let itemsToRender = [];
-        if (isCompressedMode) {
-            const basicSprites = baseSprites.filter(s => s.theme === 'Basic');
-            
-            basicSprites.forEach(baseSprite => {
-                const baseNameRoot = baseSprite.name.replace(/\s*\(Basic\)\s*/i, '').trim();
-                
-                let alternatives = baseSprites.filter(s => s.id !== baseSprite.id && s.name.toLowerCase().includes(baseNameRoot.toLowerCase()));
-                
-                if (!showUnreleased) {
-                    alternatives = alternatives.filter(v => !v.unreleased);
-                }
-                
-                const matchesSearch = baseSprite.name.toLowerCase().includes(searchQuery);
-                const matchesTheme = selectedTheme === 'all' || selectedTheme === 'Basic';
-                
-                if (!showUnreleased && baseSprite.unreleased) return;
-
-                if (matchesSearch && matchesTheme) {
-                    itemsToRender.push({
-                        sprite: baseSprite,
-                        isBase: true,
-                        variants: alternatives
-                    });
-                }
-            });
-        } else {
-            baseSprites.forEach(sprite => {
-                const matchesSearch = sprite.name.toLowerCase().includes(searchQuery);
-                const matchesTheme = selectedTheme === 'all' || sprite.theme === selectedTheme;
-                
-                if (matchesSearch && matchesTheme) {
-                    itemsToRender.push({
-                        sprite: sprite,
-                        isBase: false,
-                        variants: []
-                    });
-                }
-            });
-        }
-
-        itemsToRender.forEach(item => {
-            const sprite = item.sprite;
+        baseSprites.forEach(sprite => {
             const isObtained = obtainedSprites.includes(sprite.id);
             
-            if (isViewMode && (!isObtained || sprite.unreleased)) return;
-            if (!isViewMode && !showUnreleased && sprite.unreleased) return;
+            if (isViewMode && (!isObtained || sprite.unreleased)) {
+                return;
+            }
 
+            if (!isViewMode && !showUnreleased && sprite.unreleased) {
+                return;
+            }
+
+            const matchesSearch = sprite.name.toLowerCase().includes(searchQuery);
+            const matchesTheme = selectedTheme === 'all' || sprite.theme === selectedTheme;
+            
             let matchesStatus = true;
             if (!isViewMode) {
                 if (currentStatusFilter === 'obtained') matchesStatus = isObtained;
                 if (currentStatusFilter === 'missing') matchesStatus = !isObtained;
             }
 
-            if (!matchesStatus) return;
+            if (matchesSearch && matchesTheme && matchesStatus) {
+                const card = document.createElement('div');
+                card.dataset.id = sprite.id;
+                
+                const itemRarity = sprite.rarity || 'Rare';
+                card.className = `sprite-card rarity-${itemRarity} ${isObtained ? 'obtained' : ''}`;
+                
+                const unreleasedBadge = sprite.unreleased ? `<div class="status-badge unreleased">UNRELEASED</div>` : '';
+                const collectedBadge = isObtained ? `<div class="status-badge collected">COLLECTED</div>` : '';
+                
+                const displayRarityText = itemRarity === 'Mythic' ? 'MYTHIC' : itemRarity;
+                const rarityBadge = `<div class="fortnite-rarity-tag">${displayRarityText}</div>`;
+                
+                const inferredImagePath = `sprites/${sprite.id}.png`;
 
-            const card = document.createElement('div');
-            card.dataset.id = sprite.id;
-            
-            const itemRarity = sprite.rarity || 'Rare';
-            card.className = `sprite-card rarity-${itemRarity} ${isObtained ? 'obtained' : ''}`;
-            card.innerHTML = buildCardHTML(sprite, isObtained);
-
-            if (item.isBase && item.variants.length > 0) {
-                const tray = document.createElement('div');
-                tray.className = 'alt-variants-tray';
-
-                item.variants.forEach(variant => {
-                    const varObtained = obtainedSprites.includes(variant.id);
-                    
-                    if (isViewMode && !varObtained) return;
-
-                    const pin = document.createElement('div');
-                    pin.className = `alt-variant-pin ${varObtained ? 'obtained-pin' : ''}`;
-                    pin.style.backgroundImage = `url('sprites/${variant.id}.png'), url('https://placehold.co/50?text=None')`;
-                    
-                    const popout = document.createElement('div');
-                    popout.className = `alt-preview-popout sprite-card rarity-${variant.rarity || 'Rare'} ${varObtained ? 'obtained' : ''}`;
-                    popout.innerHTML = buildCardHTML(variant, varObtained);
-                    
-                    pin.appendChild(popout);
-
-                    if (!isViewMode) {
-                        pin.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            toggleObtained(variant.id, popout);
-                            if (obtainedSprites.includes(variant.id)) {
-                                pin.classList.add('obtained-pin');
-                            } else {
-                                pin.classList.remove('obtained-pin');
-                            }
-                        });
-                    }
-                    tray.appendChild(pin);
-                });
-
-                if (tray.children.length > 0) {
-                    card.appendChild(tray);
+                card.innerHTML = `
+                    ${unreleasedBadge}
+                    ${collectedBadge}
+                    <div class="card-inner-display">
+                        <img src="${inferredImagePath}" class="sprite-img" alt="${sprite.name}" onerror="this.src='https://placehold.co/150?text=Missing+File'">
+                        ${rarityBadge}
+                    </div>
+                    <div class="card-title-footer">${sprite.name}</div>
+                `;
+                
+                if (!isViewMode) {
+                    card.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        toggleObtained(sprite.id, card);
+                    });
                 }
+                
+                spriteGrid.appendChild(card);
             }
-
-            if (!isViewMode) {
-                card.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    toggleObtained(sprite.id, card);
-                });
-            }
-            
-            spriteGrid.appendChild(card);
         });
-
-        adjustCardFontSizes();
     }
 
     function toggleObtained(id, cardElement) {
@@ -1123,14 +955,8 @@
                 ctx.fillRect(x, y + innerH, cardW, 30);
 
                 ctx.fillStyle = '#ffffff';
-                let calculatedFontSize = 12;
-                ctx.font = `700 ${calculatedFontSize}px Oswald`;
+                ctx.font = '700 12px Oswald';
                 ctx.textAlign = 'center';
-                
-                while(ctx.measureText(sprite.name).width > (cardW - 8) && calculatedFontSize > 8) {
-                    calculatedFontSize -= 0.5;
-                    ctx.font = `700 ${calculatedFontSize}px Oswald`;
-                }
                 ctx.fillText(sprite.name, x + (cardW / 2), y + innerH + 19);
 
                 ctx.fillStyle = accentColor;
@@ -1176,6 +1002,7 @@
 
     if (isViewMode) {
         unreleasedSwitch.disabled = true;
+        lowFidelitySwitch.disabled = true;
         toggleAll.disabled = true;
         toggleOwned.disabled = true;
         toggleUnowned.disabled = true;
