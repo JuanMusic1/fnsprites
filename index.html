@@ -350,6 +350,25 @@
             font-weight: 500;
         }
 
+        .sub-btn {
+            display: inline-block;
+            background-color: #ff0000;
+            color: #ffffff;
+            font-weight: 700;
+            padding: 6px 16px;
+            margin-top: 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.15s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .sub-btn:hover {
+            background-color: #cc0000;
+        }
+
         .sprite-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -363,7 +382,7 @@
             padding: 0px;
             position: relative;
             cursor: pointer;
-            aspect-ratio: 1 / 1.18;
+            aspect-ratio: 1 / 1.25;
             display: flex;
             flex-direction: column;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
@@ -507,9 +526,9 @@
 
         /* Reconstructed Alignment Layout Footer Container */
         .card-title-footer {
-            height: 28px;
-            min-height: 28px;
-            max-height: 28px;
+            height: 38px;
+            min-height: 38px;
+            max-height: 38px;
             padding: 0px 4px;
             color: #ffffff;
             z-index: 3;
@@ -595,7 +614,7 @@
             transform: translateY(-50%) scale(0.1);
             transform-origin: right center; 
             width: 154px; 
-            height: 181px;
+            height: 191px;
             z-index: 15;
             pointer-events: none;
             opacity: 0;
@@ -680,11 +699,11 @@
             <div class="panel-box creator-card">
                 <div class="creator-title">Made by Rick</div>
                 <a href="https://youtube.com/@rickventure" class="creator-link" target="_blank">
-                    <img src="sprites/rickpfp.png" class="creator-img" alt="Rickventure Channel" onerror="this.src='https://placehold.co/200?text=Rickventure'">
+                    <img src="rickpfpfpeak.png" class="creator-img" alt="Rickventure Channel" onerror="this.src='https://placehold.co/200?text=Rickventure'">
                 </a>
+                <a href="https://youtube.com/@rickventure" class="sub-btn" target="_blank">sub 2 me</a>
                 <div class="creator-subtext">
-                    Help me reach 1,000 subscribers so I can put a creator code here.<br>
-                    This project was only 50% vibe coded btw.
+                    Help me reach 1,000 subscribers so I can put a creator code here.
                 </div>
             </div>
         </div>
@@ -1031,7 +1050,7 @@
         const ctx = canvas.getContext('2d');
         
         const cardW = 160;
-        const cardH = 190;
+        const cardH = 200; // Updated dynamically to match the exact card sizing ratio layout adjustment
         const padding = 15;
         const cols = Math.min(6, collectedItems.length);
         const rows = Math.ceil(collectedItems.length / cols);
@@ -1060,7 +1079,7 @@
                 ctx.fillStyle = '#0f141d';
                 ctx.fillRect(x, y, cardW, cardH);
 
-                const innerH = cardH - 28;
+                const innerH = cardH - 38; // Matches updated layout footer height parameters
                 let bgGrad = ctx.createLinearGradient(x, y, x, y + innerH);
                 let accentColor = '#004A8E';
                 let tagTxtColor = '#00FFFB';
@@ -1132,7 +1151,7 @@
                 ctx.fillText(rarity === 'Mythic' ? 'MYTHIC' : rarity, x + 6, y + innerH - 5);
 
                 ctx.fillStyle = 'rgba(15, 20, 29, 0.9)';
-                ctx.fillRect(x, y + innerH, cardW, 28);
+                ctx.fillRect(x, y + innerH, cardW, 38);
 
                 ctx.fillStyle = '#ffffff';
                 let calculatedFontSize = 13;
@@ -1144,7 +1163,7 @@
                     calculatedFontSize -= 0.5;
                     ctx.font = `700 ${calculatedFontSize}px Oswald`;
                 }
-                ctx.fillText(sprite.name, x + (cardW / 2), y + innerH + 14);
+                ctx.fillText(sprite.name, x + (cardW / 2), y + innerH + 19);
 
                 ctx.fillStyle = accentColor;
                 if (rarity === 'Special') {
