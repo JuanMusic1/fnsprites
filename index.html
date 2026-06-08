@@ -561,7 +561,7 @@
             top: 6px;
             right: 6px;
             display: flex;
-            flex-direction: column; /* Line them up on the right side going down */
+            flex-direction: column; 
             gap: 4px;
             z-index: 8;
         }
@@ -588,8 +588,8 @@
             top: 50%;
             right: 0;
             transform: translateY(-50%) scale(0.1);
-            transform-origin: right center; /* Expands smoothly from right side anchor position */
-            width: 154px; /* Fixed normal size specifications matching base viewport limits */
+            transform-origin: right center; 
+            width: 154px; 
             height: 181px;
             z-index: 15;
             pointer-events: none;
@@ -599,7 +599,7 @@
 
         .alt-variant-pin:hover .alt-preview-popout {
             opacity: 1;
-            transform: translateY(-50%) scale(1); /* Expands to full standard card footprint */
+            transform: translateY(-50%) scale(1); 
             pointer-events: auto;
         }
     </style>
@@ -852,10 +852,8 @@
             basicSprites.forEach(baseSprite => {
                 const baseNameRoot = baseSprite.name.replace(/\s*\(Basic\)\s*/i, '').trim();
                 
-                // Get all variant templates
                 let alternatives = baseSprites.filter(s => s.id !== baseSprite.id && s.name.toLowerCase().includes(baseNameRoot.toLowerCase()));
                 
-                // Filter unreleased items within alternative trays based on showUnreleased state
                 if (!showUnreleased) {
                     alternatives = alternatives.filter(v => !v.unreleased);
                 }
@@ -863,7 +861,6 @@
                 const matchesSearch = baseSprite.name.toLowerCase().includes(searchQuery);
                 const matchesTheme = selectedTheme === 'all' || selectedTheme === 'Basic';
                 
-                // Hide basic card entirely if it is unreleased and showUnreleased is off
                 if (!showUnreleased && baseSprite.unreleased) return;
 
                 if (matchesSearch && matchesTheme) {
@@ -917,6 +914,9 @@
 
                 item.variants.forEach(variant => {
                     const varObtained = obtainedSprites.includes(variant.id);
+                    
+                    if (isViewMode && !varObtained) return;
+
                     const pin = document.createElement('div');
                     pin.className = `alt-variant-pin ${varObtained ? 'obtained-pin' : ''}`;
                     pin.style.backgroundImage = `url('sprites/${variant.id}.png'), url('https://placehold.co/50?text=None')`;
@@ -941,7 +941,10 @@
                     }
                     tray.appendChild(pin);
                 });
-                card.appendChild(tray);
+
+                if (tray.children.length > 0) {
+                    card.appendChild(tray);
+                }
             }
 
             if (!isViewMode) {
@@ -1173,8 +1176,6 @@
 
     if (isViewMode) {
         unreleasedSwitch.disabled = true;
-        lowFidelitySwitch.disabled = true;
-        compressedGridSwitch.disabled = true;
         toggleAll.disabled = true;
         toggleOwned.disabled = true;
         toggleUnowned.disabled = true;
