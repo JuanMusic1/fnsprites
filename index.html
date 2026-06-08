@@ -545,7 +545,7 @@
             display: inline-block;
             max-width: 100%;
             overflow: hidden;
-            text-overflow: ellipsis;
+            text-overflow: clip;
             white-space: nowrap;
             line-height: 1;
             text-align: center;
@@ -699,7 +699,7 @@
             <div class="panel-box creator-card">
                 <div class="creator-title">Made by Rick</div>
                 <a href="https://youtube.com/@rickventure" class="creator-link" target="_blank">
-                    <img src="sprites/rickpfpfpeak.png" class="creator-img" alt="Rickventure Channel" onerror="this.src='sprites/rickpfpfpeak.png'">
+                    <img src="sprites/rickpfpeak.png" class="creator-img" alt="Rickventure Channel" onerror="this.src='sprites/rickpfpeak.png'">
                 </a>
                 <a href="https://youtube.com/@rickventure" class="sub-btn" target="_blank">sub 2 me</a>
                 <div class="creator-subtext">
@@ -827,10 +827,10 @@
     function adjustCardFontSizes() {
         document.querySelectorAll('.card-title-footer span').forEach(span => {
             const parent = span.parentElement;
-            let currentSize = 13; 
+            let currentSize = 14.95; // 13 * 1.15 = 14.95 (15% bigger starting baseline size)
             span.style.fontSize = currentSize + 'px';
             
-            while ((span.scrollWidth > parent.clientWidth || span.scrollHeight > parent.clientHeight) && currentSize > 7) {
+            while ((span.scrollWidth > parent.clientWidth || span.scrollHeight > parent.clientHeight) && currentSize > 6) {
                 currentSize -= 0.5;
                 span.style.fontSize = currentSize + 'px';
             }
@@ -1155,12 +1155,12 @@
                 ctx.fillRect(x, y + innerH, cardW, 38);
 
                 ctx.fillStyle = '#ffffff';
-                let calculatedFontSize = 13;
+                let calculatedFontSize = 14.95; // 13 * 1.15 = 14.95 (15% bigger starting baseline size)
                 ctx.font = `700 ${calculatedFontSize}px Oswald`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 
-                while((ctx.measureText(sprite.name).width > (cardW - 8)) && calculatedFontSize > 7) {
+                while((ctx.measureText(sprite.name).width > (cardW - 8)) && calculatedFontSize > 6) {
                     calculatedFontSize -= 0.5;
                     ctx.font = `700 ${calculatedFontSize}px Oswald`;
                 }
