@@ -616,7 +616,7 @@
         });
 
         if (activeCollected.length === 0) {
-            alert("YOUR CHECKLIST IS EMPTY! CHOOSE SOME SPRITES BEFORE GENERATING A LINK.");
+            alert("You haven't collected any sprites! Click some before you generate a share link.");
             return;
         }
 
@@ -624,9 +624,9 @@
         const shareURL = `${window.location.origin}${window.location.pathname}?c=${compressionCodeString}`;
         
         navigator.clipboard.writeText(shareURL).then(() => {
-            alert("COMPRESSED COLLECTION LINK COPIED TO CLIPBOARD!");
+            alert("Share link copied to clipboard! Paste it to your friends to show off your sprite collection.");
         }).catch(err => {
-            prompt("COPY YOUR SHARE LINK BELOW:", shareURL);
+            prompt("Copy your link here:", shareURL);
         });
     });
 
