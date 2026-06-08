@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortnite: Runners - Sprite Collection Catalogue</title>
+    <style>
+        :root {
+            --bg-dark: #0f1115;
+            --card-bg: #1c1f26;
+            --accent-yellow: #f4c430;
+            --text-light: #f5f6f7;
+            --text-muted: #8a929e;
+            --border-color: #2d323f;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--accent-yellow);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            font-style: italic;
+            letter-spacing: 1px;
+            margin: 0 0 10px 0;
+        }
+
+        /* Toolkit controls wrapper */
+        .controls {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-box, .filter-select, .file-input-btn {
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .file-input-btn {
+            background-color: var(--accent-yellow);
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.2s;
+        }
+
+        .file-input-btn:hover {
+            opacity: 0.9;
+        }
+
+        #sprite-upload {
+            display: none;
+        }
+
+        /* Sprite Grid Layout */
+        .sprite-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        /* Sprite Card Styles mimicking the UI */
+        .sprite-card {
+            background: linear-gradient(145deg, #232730, #16191f);
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            user-select: none;
+        }
+
+        .sprite-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .sprite-card.obtained {
+            border-color: var(--accent-yellow);
+            box-shadow: 0 0 15px rgba(244, 196, 48, 0.2);
+        }
+
+        .sprite-card.obtained::before {
+            content: "👑";
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 16px;
+        }
+
+        .sprite-img-wrapper {
+            width: 100%;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .sprite-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .sprite-name {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .sprite-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .status-badge {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            background-color: #3a3f4d;
+        }
+
+        .obtained .status-badge {
+            background-color: var(--accent-yellow);
+            color: #000;
+        }
+
+        /* Modal Styles for Custom Upload Data */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center; align-items: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid var(--border-color);
+        }
+        .modal-content h3 { margin-top: 0; }
+        .modal-content input, .modal-content select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            background-color: var(--bg-dark);
+            color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-confirm { background-color: var(--accent-yellow); color: black; font-weight: bold;}
+        .btn-cancel { background-color: #4a5262; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>ALL SPRITES COLLECTION</h1>
+        <p style="color: var(--text-muted); margin: 0;">Track, catalog, and search your extracted Sprites</p>
+    </header>
+
+    <div class="controls">
+        <input type="text" id="search" class="search-box" placeholder="Search Sprites (e.g. Earth, Gold, Demon)...">
+        
+        <select id="variant-filter" class="filter-select">
+            <option value="all">All Variants</option>
+            <option value="Base">Base Variant</option>
+            <option value="Gold">Gold Variant</option>
+            <option value="Custom">Custom Uploads</option>
+        </select>
+
+        <select id="status-filter" class="filter-select">
+            <option value="all">All Statuses</option>
+            <option value="obtained">Collected (👑)</option>
+            <option value="missing">Missing</option>
+        </select>
+
+        <label for="sprite-upload" class="file-input-btn">➕ Add New Sprite Variation</label>
+        <input type="file" id="sprite-upload" accept="image/*">
+    </div>
+
+    <div class="sprite-grid" id="spriteGrid"></div>
+</div>
+
+<div class="modal" id="uploadModal">
+    <div class="modal-content">
+        <h3>New Sprite Metadata</h3>
+        <label>Sprite Name:</label>
+        <input type="text" id="modal-name" placeholder="e.g. Water Sprite, Zero Point">
+        
+        <label>Style/Variant Variant:</label>
+        <select id="modal-variant">
+            <option value="Base">Base Style</option>
+            <option value="Gold">Gold Style</option>
+            <option value="Custom">Custom / Other Style</option>
+        </select>
+        
+        <div class="modal-buttons">
+            <button class="btn btn-cancel" id="modal-cancel">Cancel</button>
+            <button class="btn btn-confirm" id="modal-save">Add to Catalog</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. Core Default Season Dataset (Base and Gold pairs mapping your in-game layout)
+    const baseSprites = [
+        { id: "water_base", name: "Water Sprite", variant: "Base", image: "https://placehold.co/150x150/1d4ed8/ffffff?text=Water" },
+        { id: "water_gold", name: "Water Sprite", variant: "Gold", image: "https://placehold.co/150x150/eab308/000000?text=Gold+Water" },
+        { id: "earth_base", name: "Earth Sprite", variant: "Base", image: "https://placehold.co/150x150/15803d/ffffff?text=Earth" },
+        { id: "fire_base", name: "Fire Sprite", variant: "Base", image: "https://placehold.co/150x150/b91c1c/ffffff?text=Fire" },
+        { id: "fire_gold", name: "Fire Sprite", variant: "Gold", image: "https://placehold.co/150x150/eab308/000000?text=Gold+Fire" },
+        { id: "demon_base", name: "Demon Sprite", variant: "Base", image: "https://placehold.co/150x150/4b5563/ffffff?text=Demon" },
+        { id: "demon_gold", name: "Demon Sprite", variant: "Gold", image: "https://placehold.co/150x150/eab308/000000?text=Gold+Demon" },
+        { id: "duck_base", name: "Duck Sprite", variant: "Base", image: "https://placehold.co/150x150/a21caf/ffffff?text=Duck" },
+        { id: "duck_gold", name: "Duck Sprite", variant: "Gold", image: "https://placehold.co/150x150/eab308/000000?text=Gold+Duck" },
+        { id: "ghost_base", name: "Ghost Sprite", variant: "Base", image: "https://placehold.co/150x150/6b21a8/ffffff?text=Ghost" },
+        { id: "ghost_gold", name: "Ghost Sprite", variant: "Gold", image: "https://placehold.co/150x150/eab308/000000?text=Gold+Ghost" },
+        { id: "king_base", name: "King Sprite", variant: "Base", image: "https://placehold.co/150x150/4338ca/ffffff?text=King" },
+        { id: "king_gold", name: "King Sprite", variant: "Gold", image: "https://placehold.co/150x150/eab308/000000?text=Gold+King" },
+        { id: "punk_base", name: "Punk Sprite", variant: "Base", image: "https://placehold.co/150x150/0f172a/ffffff?text=Punk" },
+        { id: "dream_base", name: "Dream Sprite", variant: "Base", image: "https://placehold.co/150x150/db2777/ffffff?text=Dream" }
+    ];
+
+    // State Variables
+    let customSprites = JSON.parse(localStorage.getItem('custom_sprites')) || [];
+    let obtainedSprites = JSON.parse(localStorage.getItem('obtained_sprites')) || [];
+    let temporaryImgData = null;
+
+    // DOM Links
+    const spriteGrid = document.getElementById('spriteGrid');
+    const searchInput = document.getElementById('search');
+    const variantFilter = document.getElementById('variant-filter');
+    const statusFilter = document.getElementById('status-filter');
+    const fileInput = document.getElementById('sprite-upload');
+    const uploadModal = document.getElementById('uploadModal');
+
+    // 2. Render Loop with live Search & Filter Application
+    function renderGrid() {
+        spriteGrid.innerHTML = '';
+        const allSprites = [...baseSprites, ...customSprites];
+        
+        const searchQuery = searchInput.value.toLowerCase();
+        const selectedVariant = variantFilter.value;
+        const selectedStatus = statusFilter.value;
+
+        allSprites.forEach(sprite => {
+            const isObtained = obtainedSprites.includes(sprite.id);
+            
+            // Search validation
+            const matchesSearch = sprite.name.toLowerCase().includes(searchQuery) || sprite.variant.toLowerCase().includes(searchQuery);
+            // Type dropdown filter validation
+            const matchesVariant = selectedVariant === 'all' || sprite.variant === selectedVariant || (selectedVariant === 'Custom' && !baseSprites.some(b => b.id === sprite.id));
+            // Checkbox tracking state validation
+            const matchesStatus = selectedStatus === 'all' || (selectedStatus === 'obtained' && isObtained) || (selectedStatus === 'missing' && !isObtained);
+
+            if (matchesSearch && matchesVariant && matchesStatus) {
+                const card = document.createElement('div');
+                card.className = `sprite-card ${isObtained ? 'obtained' : ''}`;
+                card.innerHTML = `
+                    <div class="sprite-img-wrapper">
+                        <img src="${sprite.image}" class="sprite-img" alt="${sprite.name}">
+                    </div>
+                    <div class="sprite-name">${sprite.name}</div>
+                    <div class="sprite-meta">${sprite.variant} Style</div>
+                    <span class="status-badge">${isObtained ? 'OWNED' : 'NOT OWNED'}</span>
+                `;
+                
+                // Toggle collected status when clicked
+                card.addEventListener('click', () => toggleObtained(sprite.id));
+                spriteGrid.appendChild(card);
+            }
+        });
+    }
+
+    // Toggle checklist status locally
+    function toggleObtained(id) {
+        if (obtainedSprites.includes(id)) {
+            obtainedSprites = obtainedSprites.filter(item => item !== id);
+        } else {
+            obtainedSprites.push(id);
+        }
+        localStorage.setItem('obtained_sprites', JSON.stringify(obtainedSprites));
+        renderGrid();
+    }
+
+    // 3. Image Upload Processing Flow
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                temporaryImgData = event.target.result; // Saves base64 string safely data
+                uploadModal.style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Save Custom Upload Item Metadata
+    document.getElementById('modal-save').addEventListener('click', () => {
+        const name = document.getElementById('modal-name').value.trim() || "Unknown Sprite";
+        const variant = document.getElementById('modal-variant').value;
+        const uniqueId = 'custom_' + Date.now();
+
+        if (temporaryImgData) {
+            const newSprite = { id: uniqueId, name, variant, image: temporaryImgData };
+            customSprites.push(newSprite);
+            localStorage.setItem('custom_sprites', JSON.stringify(customSprites));
+            
+            // Clean modal states
+            document.getElementById('modal-name').value = '';
+            uploadModal.style.display = 'none';
+            fileInput.value = '';
+            renderGrid();
+        }
+    });
+
+    document.getElementById('modal-cancel').addEventListener('click', () => {
+        uploadModal.style.display = 'none';
+        fileInput.value = '';
+    });
+
+    // Search and Filter updates trigger instantaneous UI redrawing
+    searchInput.addEventListener('input', renderGrid);
+    variantFilter.addEventListener('change', renderGrid);
+    statusFilter.addEventListener('change', renderGrid);
+
+    // Bootstrap run on load
+    renderGrid();
+</script>
+</body>
+</html>
