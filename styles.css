@@ -513,28 +513,37 @@ body.low-fidelity .sprite-card.rarity-Special .card-inner-display { background: 
         padding: 12px; /* Extra breathing room on small screens */
     }
 
+    /* Convert the entire app into a single column so we can reorder everything globally */
     .app-layout {
         display: flex;
         flex-direction: column;
         gap: 16px;
     }
-    
-    /* Fixed class name from .layout-sidebar to .sidebar */
+
+    /* Force the sidebar wrapper to act as transparent layout-wise */
     .sidebar {
         display: flex;
         flex-direction: column;
         gap: 16px;
-        order: 1; 
+        display: contents; /* Allows children (search & creator) to be reordered independently */
+    }
+
+    /* Place the Search/Filter panel box first */
+    .sidebar .panel-box:not(.creator-card) {
+        order: 1;
+        width: 100%;
     }
 
     /* Move the main sprite grid into the middle position */
     .sprite-grid {
         order: 2;
+        width: 100%;
     }
 
-    /* Push the creator card to the very bottom below the grid */
+    /* Push the creator card to the absolute bottom below the grid */
     .creator-card {
         order: 3;
+        width: 100%;
     }
 
     /* 2. Compact & Flexible Navbar */
@@ -658,43 +667,44 @@ body.low-fidelity .sprite-card.rarity-Special .card-inner-display { background: 
    LANDSCAPE MOBILE OPTIMIZATION
    ========================================== */
 @media (max-width: 932px) and (orientation: landscape) {
-    /* 1. Recalculate Layout Flex System */
+    /* 1. Reset layout behavior */
     .app-layout {
         display: flex;
         flex-direction: column;
-        align-items: center; /* Centers children horizontally */
+        align-items: center; 
         width: 100%;
     }
 
-    /* 2. Center Search Box & Panels */
     .sidebar {
-        width: 100%;
-        max-width: 500px; /* Limits width so inputs don't stretch indefinitely */
-        align-items: center;
-        order: 1;
+        display: contents; 
     }
 
-    .panel-box {
+    /* 2. Center Search Box & Filters */
+    .sidebar .panel-box:not(.creator-card) {
+        order: 1;
         width: 100%;
+        max-width: 500px; /* Keeps search from stretching too wide horizontally */
         text-align: center;
+        margin: 0 auto;
     }
 
     /* 3. Fluid Grid Center & Extra Columns Expansion */
     .sprite-grid {
         order: 2;
         width: 100%;
-        justify-content: center; /* Centers sprite rows if they don't fill the space */
+        justify-content: center; /* Centers items if a row isn't fully filled */
         
-        /* Auto-fills as many columns as possible down to a min-width of 115px */
+        /* Dynamically spans extra columns as width expands in landscape */
         grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
         gap: 10px;
     }
 
-    /* 4. Center Creator Details at the Bottom */
+    /* 4. Center Creator Details perfectly at the bottom */
     .creator-card {
         order: 3;
         width: 100%;
         max-width: 500px;
         margin: 15px auto 0 auto;
+        text-align: center;
     }
 }
