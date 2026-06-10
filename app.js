@@ -48,6 +48,24 @@ function setStatusFilter(filterValue, activeButton) {
     renderGrid();
 }
 
+// Hide Creator Card for the Session
+const creatorCard = document.querySelector('.creator-card');
+const closeCreatorBtn = document.getElementById('closeCreatorBtn');
+
+// Check if the user already closed it this session
+if (sessionStorage.getItem('hide_creator_card') === 'true' && creatorCard) {
+    creatorCard.style.display = 'none';
+}
+
+// Add the click event listener to hide it and save the preference
+if (closeCreatorBtn && creatorCard) {
+    closeCreatorBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        creatorCard.style.display = 'none';
+        sessionStorage.setItem('hide_creator_card', 'true');
+    });
+}
+
 toggleAll.addEventListener('click', () => setStatusFilter('all', toggleAll));
 toggleOwned.addEventListener('click', () => setStatusFilter('obtained', toggleOwned));
 toggleUnowned.addEventListener('click', () => setStatusFilter('missing', toggleUnowned));
