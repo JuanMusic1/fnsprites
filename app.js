@@ -27,6 +27,8 @@ const lowFidelitySwitch = document.getElementById('low-fidelity-switch');
 const shareBtn = document.getElementById('shareBtn');
 const imageBtn = document.getElementById('imageBtn');
 const missingImageBtn = document.getElementById('missingImageBtn');
+const unmasteredImageBtn = document.getElementById('unmasteredImageBtn');
+const masteredImageBtn = document.getElementById('masteredImageBtn');
 
 // New Switches
 const hideMasteredSwitch = document.getElementById('hide-mastered-switch');
@@ -326,6 +328,22 @@ function exportCanvasImage(mode) {
         titleColor = "#ef4444"; 
         fileName = "fnsprites-missing";
         if (targetItems.length === 0) { alert("You aren't missing any released sprites!"); return; }
+    } else if (mode === 'unmastered') {
+        targetItems = baseSprites.filter(s => obtainedSprites.includes(s.id) && !masteredSprites.includes(s.id));
+        titleL1 = "FORTNITE SPRITES TRACKER:";
+        titleL2 = "UNMASTERED SPRITES";
+        fallbackTitleText = "UNMASTERED";
+        titleColor = "#00f0ff"; 
+        fileName = "fnsprites-unmastered";
+        if (targetItems.length === 0) { alert("You don't have any unmastered sprites!"); return; }
+    } else if (mode === 'mastered') {
+        targetItems = baseSprites.filter(s => obtainedSprites.includes(s.id) && masteredSprites.includes(s.id));
+        titleL1 = "FORTNITE SPRITES TRACKER:";
+        titleL2 = "MASTERED SPRITES";
+        fallbackTitleText = "MASTERED";
+        titleColor = "#ffd700"; 
+        fileName = "fnsprites-mastered";
+        if (targetItems.length === 0) { alert("You don't have any mastered sprites!"); return; }
     }
 
     if (groupThemeSwitch.checked) {
@@ -584,7 +602,7 @@ function exportCanvasImage(mode) {
                 let nh = img.height * ratio;
                 ctx.drawImage(img, x + (cardW - nw) / 2, y + (innerH - nh) / 2, nw, nh);
 
-                if (mode === 'collected') {
+                if (mode === 'collected' || mode === 'unmastered' || mode === 'mastered') {
                     if (isMastered) {
                         ctx.save();
                         ctx.fillStyle = '#ffd700';
@@ -708,5 +726,7 @@ function finalizeCanvas(canvas, footerLinkHeight, borderThickness, fileName) {
 
 imageBtn.addEventListener('click', () => exportCanvasImage('collected'));
 missingImageBtn.addEventListener('click', () => exportCanvasImage('missing'));
+unmasteredImageBtn.addEventListener('click', () => exportCanvasImage('unmastered'));
+masteredImageBtn.addEventListener('click', () => exportCanvasImage('mastered'));
 
 renderGrid();

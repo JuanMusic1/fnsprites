@@ -8,6 +8,7 @@
     --fn-collected: #22c55e;
     --fn-lime: #32cd32;
     --fn-mastered: #ffd700;
+    --fn-magenta: #ed2bff;
 
     /* Precise Fortnite Locker Hex Codes */
     --color-Rare: #004A8E;
@@ -78,6 +79,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     border-bottom: 4px solid #ffffff;
     padding-bottom: 10px;
     margin-bottom: 30px;
@@ -108,6 +110,7 @@ body {
 .nav-controls-right {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 15px;
 }
 
@@ -156,11 +159,10 @@ body {
     background: linear-gradient(90deg, #e6b800, var(--fn-mastered));
 }
 
-.share-btn, .image-btn, .missing-image-btn {
+.share-btn, .image-btn, .missing-image-btn, .unmastered-image-btn, .mastered-image-btn {
     font-size: 20px;
     font-weight: 700;
     font-style: italic;
-    background: linear-gradient(90deg, transparent, rgba(244,196,48,0.15));
     color: #ffffff;
     padding: 8px 24px;
     border: 2px solid transparent;
@@ -171,13 +173,17 @@ body {
     align-items: center;
 }
 
-.share-btn { border-right: 4px solid var(--fn-yellow); }
+.share-btn { border-right: 4px solid var(--fn-magenta); background: linear-gradient(90deg, transparent, rgba(237,43,255,0.15)); }
 .image-btn { border-right: 4px solid var(--fn-lime); background: linear-gradient(90deg, transparent, rgba(50,205,50,0.15)); }
 .missing-image-btn { border-right: 4px solid var(--fn-unreleased); background: linear-gradient(90deg, transparent, rgba(239,68,68,0.15)); }
+.unmastered-image-btn { border-right: 4px solid var(--fn-neon-cyan); background: linear-gradient(90deg, transparent, rgba(0,240,255,0.15)); }
+.mastered-image-btn { border-right: 4px solid var(--fn-mastered); background: linear-gradient(90deg, transparent, rgba(255,215,0,0.15)); }
 
-.share-btn:hover { background: linear-gradient(90deg, transparent, rgba(244,196,48,0.3)); border-color: rgba(255,255,255,0.2); }
+.share-btn:hover { background: linear-gradient(90deg, transparent, rgba(237,43,255,0.3)); border-color: rgba(255,255,255,0.2); }
 .image-btn:hover { background: linear-gradient(90deg, transparent, rgba(50,205,50,0.3)); border-color: rgba(255,255,255,0.2); }
 .missing-image-btn:hover { background: linear-gradient(90deg, transparent, rgba(239,68,68,0.3)); border-color: rgba(255,255,255,0.2); }
+.unmastered-image-btn:hover { background: linear-gradient(90deg, transparent, rgba(0,240,255,0.3)); border-color: rgba(255,255,255,0.2); }
+.mastered-image-btn:hover { background: linear-gradient(90deg, transparent, rgba(255,215,0,0.3)); border-color: rgba(255,255,255,0.2); }
 
 .app-layout {
     display: grid;
@@ -558,7 +564,9 @@ body.low-fidelity .sprite-card.rarity-Special .card-inner-display { background: 
 
     .nav-controls-right > .share-btn,
     .nav-controls-right > .image-btn,
-    .nav-controls-right > .missing-image-btn {
+    .nav-controls-right > .missing-image-btn,
+    .nav-controls-right > .unmastered-image-btn,
+    .nav-controls-right > .mastered-image-btn {
         display: flex;
         justify-content: center;
         font-size: 16px;
@@ -569,9 +577,11 @@ body.low-fidelity .sprite-card.rarity-Special .card-inner-display { background: 
         border-bottom: 3px solid transparent;
     }
 
-    .share-btn { border-bottom-color: var(--fn-yellow) !important; }
+    .share-btn { border-bottom-color: var(--fn-magenta) !important; }
     .image-btn { border-bottom-color: var(--fn-lime) !important; }
     .missing-image-btn { border-bottom-color: var(--fn-unreleased) !important; }
+    .unmastered-image-btn { border-bottom-color: var(--fn-neon-cyan) !important; }
+    .mastered-image-btn { border-bottom-color: var(--fn-mastered) !important; }
 
     .panel-box {
         padding: 14px; 
