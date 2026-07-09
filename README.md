@@ -27,20 +27,31 @@ Plain HTML/CSS/JS. No build step, no dependencies. Hosted on GitHub Pages.
 
 | File | Purpose |
 |------|---------|
-| `index.html` | UI — navbar, sidebar filters, sprite grid |
+| `index.html` | UI — topbar, sidebar filters, sprite grid |
 | `app.js` | Main logic — load state, render grid, filters, image export |
-| `sprites-data.js` | Developer data sheet — add sprites, change rarities, toggle unreleased |
+| `sprites-data.js` | Data sheet — characters, themes, rarities, colors. The only file you touch to add content |
 | `share-utils.js` | Encode/decode collection into a shareable URL |
-| `styles.css` | Styling |
-| `sprites/` | Sprite images, named `{sprite}_{theme}.png` |
+| `styles.css` | Styling (theme/rarity colors come from `sprites-data.js`) |
+| `sprites/` | Sprite images, named `{base}_{theme}.png` |
 | `siteimages/` | Site assets (mascot, icons) |
 
-## Adding or editing sprites
+## Adding a new sprite / character
 
-Edit `baseSprites` in `sprites-data.js`. Each entry:
+Everything happens in `sprites-data.js`:
+
+1. Drop the PNGs in `sprites/` named `{base}_{theme}.png` (e.g. `wick_gold.png`).
+2. Add **one entry at the end** of the `characters` list:
 
 ```js
-{ id: "water_basic", name: "Water", theme: "Basic", rarity: "Rare", unreleased: false }
+{ base: 'wick', name: 'John Wick', rarity: 'Mythic',
+  themes: ['Basic'],          // released variants
+  unreleased: ['Gold'] }      // exist but not in-game yet
 ```
 
-Drop the matching image in `sprites/` as `{id}.png` (e.g. `water_basic.png`).
+Names, ids, filters, grouping, card colors and image export are generated automatically. Use `names: { Holofoil: 'Custom Name' }` to override a variant's display name.
+
+> ⚠ Always **append** new characters at the end — share links encode the collection by position, so inserting in the middle breaks previously shared links.
+
+## Adding a new theme
+
+Add one entry to `THEME_CONFIG` in `sprites-data.js` (label, name prefix, card gradient colors). The filter dropdown, sort order and export images pick it up automatically.
