@@ -860,6 +860,24 @@ body.low-fidelity .sprite-card .card-inner-display::before { display: none; }
 .sprite-card.mastered::after { background: var(--mastered); }
 
 /* ------------------------------------------------------------
+   KONAMI CODE EASTER EGG — barrel roll wave across the grid
+   (declared after .mastered so the spin wins while it runs)
+   ------------------------------------------------------------ */
+.sprite-card.konami-spin {
+    animation: konamiSpin 0.8s ease-in-out both;
+    z-index: 4;
+}
+
+@keyframes konamiSpin {
+    0% { transform: perspective(600px) rotateY(0deg); }
+    100% { transform: perspective(600px) rotateY(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sprite-card.konami-spin { animation: none; }
+}
+
+/* ------------------------------------------------------------
    STATS MODAL
    ------------------------------------------------------------ */
 .modal-overlay {

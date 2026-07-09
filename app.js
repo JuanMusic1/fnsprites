@@ -1040,4 +1040,45 @@ function finalizeCanvas(canvas, footerLinkHeight, borderThickness, fileName) {
     link.click();
 }
 
+// 🎮 KONAMI CODE EASTER EGG — ↑↑↓↓←→←→BA: every card does a barrel roll
+const KONAMI_SEQUENCE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+let konamiPos = 0;
+let konamiActive = false;
+
+document.addEventListener('keydown', (e) => {
+    if (e.target.matches('input, select, textarea')) return;
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if (key === KONAMI_SEQUENCE[konamiPos]) {
+        konamiPos++;
+    } else {
+        konamiPos = (key === KONAMI_SEQUENCE[0]) ? 1 : 0;
+    }
+    if (konamiPos === KONAMI_SEQUENCE.length) {
+        konamiPos = 0;
+        konamiBarrelRoll();
+    }
+});
+
+function konamiBarrelRoll() {
+    if (konamiActive) return;
+    const cards = document.querySelectorAll('.sprite-card');
+    if (cards.length === 0) return;
+    konamiActive = true;
+    console.log('🎮 KONAMI CODE! Do a barrel roll!');
+
+    cards.forEach((card, i) => {
+        card.style.animationDelay = `${i * 30}ms`;
+        card.classList.add('konami-spin');
+    });
+
+    // clean up once the wave finishes so glow animations resume and it can re-trigger
+    setTimeout(() => {
+        cards.forEach(card => {
+            card.classList.remove('konami-spin');
+            card.style.animationDelay = '';
+        });
+        konamiActive = false;
+    }, 800 + cards.length * 30 + 100);
+}
+
 renderGrid();
