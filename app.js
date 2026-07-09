@@ -210,6 +210,8 @@ function buildCardHTML(sprite, isObtained, isMastered) {
         crownHTML = `<div class="crown-action-icon" title="${crownTitle}">👑</div>`;
     }
 
+    const floatCrown = isMastered ? `<div class="rendered-head-crown">👑</div>` : '';
+
     const isSpecial = sprite.rarity === 'Special';
     const tagBg = isSpecial && !lowFid ? SPECIAL_TAG_CSS : colors.tag;
     const rarityBadge = `<div class="fortnite-rarity-tag" style="background:${tagBg};color:${colors.text}">${sprite.rarity === 'Mythic' ? 'MYTHIC' : sprite.rarity}</div>`;
@@ -219,6 +221,7 @@ function buildCardHTML(sprite, isObtained, isMastered) {
         ${stateBadge}
         ${crownHTML}
         <div class="card-inner-display" style="background:${bgStyle}">
+            ${floatCrown}
             <img src="sprites/${sprite.id}.png" class="sprite-img" alt="${sprite.name}" loading="lazy" onerror="this.src='https://placehold.co/150?text=Missing+File'">
             ${rarityBadge}
         </div>
@@ -244,7 +247,7 @@ function createCardElement(sprite) {
             crownIcon.addEventListener('click', (e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                toggleMastery(sprite.id);
+                toggleMastery(sprite.id, card);
             });
         }
         card.addEventListener('click', (e) => {
@@ -302,6 +305,10 @@ function renderGrid() {
             if (themeSprites.length === 0) return;
 
             const ownedCount = themeSprites.filter(s => obtainedSprites.includes(s.id)).length;
+            const masteredCount = themeSprites.filter(s => masteredSprites.includes(s.id)).length;
+            const masteredLabel = masteredCount > 0
+                ? `<span class="theme-section-mastered">👑 ${masteredCount === themeSprites.length ? 'ALL MASTERED' : masteredCount + ' mastered'}</span>`
+                : '';
 
             const section = document.createElement('section');
             const header = document.createElement('div');
@@ -309,6 +316,7 @@ function renderGrid() {
             header.innerHTML = `
                 <span class="theme-section-title">${THEME_CONFIG[themeKey].label}</span>
                 <span class="theme-section-count">${ownedCount} / ${themeSprites.length} collected</span>
+                ${masteredLabel}
             `;
             const sectionGrid = document.createElement('div');
             sectionGrid.className = 'sprite-grid';
@@ -340,15 +348,48 @@ function toggleObtained(id) {
     renderGrid();
 }
 
-function toggleMastery(id) {
+function toggleMastery(id, cardElement) {
     if (!obtainedSprites.includes(id)) return;
-    if (!masteredSprites.includes(id)) {
+    const mastering = !masteredSprites.includes(id);
+    if (mastering) {
         masteredSprites.push(id);
+        if (cardElement) spawnMasteryBurst(cardElement);
     } else {
         masteredSprites = masteredSprites.filter(item => item !== id);
     }
     localStorage.setItem('fn_mastered_sprites', JSON.stringify(masteredSprites));
     renderGrid();
+    if (mastering) {
+        // renderGrid rebuilt the DOM; find the fresh card to play the pop-in
+        const newCard = spriteGrid.querySelector(`.sprite-card[data-id="${id}"]`);
+        if (newCard) newCard.classList.add('just-mastered');
+    }
+}
+
+// Gold particle burst fired from the center of the card being mastered
+function spawnMasteryBurst(cardElement) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const rect = cardElement.getBoundingClientRect();
+    const burst = document.createElement('div');
+    burst.className = 'mastery-burst';
+    burst.style.left = `${rect.left + window.scrollX + rect.width / 2}px`;
+    burst.style.top = `${rect.top + window.scrollY + rect.height / 2}px`;
+
+    const glyphs = ['✨', '⭐', '👑', '✦'];
+    const particleCount = 14;
+    for (let i = 0; i < particleCount; i++) {
+        const p = document.createElement('span');
+        p.textContent = glyphs[i % glyphs.length];
+        const angle = (Math.PI * 2 * i) / particleCount + Math.random() * 0.5;
+        const dist = 60 + Math.random() * 70;
+        p.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
+        p.style.setProperty('--dy', `${Math.sin(angle) * dist - 30}px`);
+        p.style.animationDelay = `${Math.random() * 80}ms`;
+        p.style.fontSize = `${11 + Math.random() * 10}px`;
+        burst.appendChild(p);
+    }
+    document.body.appendChild(burst);
+    setTimeout(() => burst.remove(), 1000);
 }
 
 shareBtn.addEventListener('click', () => {

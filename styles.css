@@ -501,6 +501,12 @@ body {
     color: var(--text-faint);
 }
 
+.theme-section-mastered {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--mastered);
+}
+
 .sprite-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
@@ -542,8 +548,27 @@ body {
 .sprite-card.obtained { border-color: rgba(34, 197, 94, 0.75); }
 .sprite-card.obtained:hover { box-shadow: 0 8px 22px rgba(34, 197, 94, 0.18); }
 
-.sprite-card.mastered { border-color: rgba(255, 215, 0, 0.8); }
-.sprite-card.mastered:hover { box-shadow: 0 8px 22px rgba(255, 215, 0, 0.2); }
+.sprite-card.mastered {
+    border-color: rgba(255, 215, 0, 0.8);
+    animation: masteredGlow 2.8s ease-in-out infinite;
+}
+
+@keyframes masteredGlow {
+    0%, 100% { box-shadow: 0 0 8px rgba(255, 215, 0, 0.15); }
+    50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+}
+
+/* Pop-in right after mastering, then settles into the glow loop */
+.sprite-card.mastered.just-mastered {
+    animation: masteredPop 0.45s ease-out, masteredGlow 2.8s ease-in-out infinite;
+}
+
+@keyframes masteredPop {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.07); }
+    65% { transform: scale(0.97); }
+    100% { transform: scale(1); }
+}
 
 .card-inner-display {
     flex: 1;
@@ -608,6 +633,54 @@ body.low-fidelity .sprite-card .card-inner-display::before { display: none; }
 
 .state-badge.collected { background: var(--collected); color: #fff; }
 .state-badge.mastered { background: var(--mastered); color: #3d2f00; font-size: 12px; }
+
+/* Floating crown above the sprite on mastered cards */
+.rendered-head-crown {
+    position: absolute;
+    top: 8%;
+    z-index: 3;
+    font-size: 24px;
+    line-height: 1;
+    pointer-events: none;
+    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.65));
+    animation: crownBob 3.2s ease-in-out infinite;
+}
+
+@keyframes crownBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+/* Mastery celebration particle burst */
+.mastery-burst {
+    position: absolute;
+    z-index: 999;
+    pointer-events: none;
+}
+
+.mastery-burst span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    animation: burstFly 0.85s cubic-bezier(0.1, 0.7, 0.3, 1) forwards;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+@keyframes burstFly {
+    0% { transform: translate(0, 0) scale(0.4); opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: translate(var(--dx), var(--dy)) scale(1.1); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sprite-card.mastered,
+    .sprite-card.mastered.just-mastered {
+        animation: none;
+        box-shadow: 0 0 14px rgba(255, 215, 0, 0.3);
+    }
+    .rendered-head-crown { animation: none; }
+}
 
 /* Unreleased ribbon */
 .status-badge.unreleased {
