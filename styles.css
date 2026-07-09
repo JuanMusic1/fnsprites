@@ -237,21 +237,71 @@ body {
    VIEW MODE BANNER
    ------------------------------------------------------------ */
 .view-mode-banner {
-    max-width: 1440px;
+    max-width: 1400px;
     margin: 16px auto 0;
-    padding: 12px 20px;
+    padding: 12px 16px;
     background: rgba(0, 240, 255, 0.07);
     border: 1px solid rgba(0, 240, 255, 0.35);
     border-radius: var(--radius-sm);
-    text-align: center;
-    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
 }
 
-.view-mode-banner a {
-    color: var(--accent);
-    font-weight: 700;
-    margin-left: 8px;
+.view-mode-text { font-weight: 600; white-space: nowrap; }
+
+.compare-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1;
 }
+
+.compare-chip {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text-dim);
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.compare-chip:hover { border-color: var(--border-strong); color: var(--text); }
+
+.compare-chip.active {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    color: #002226;
+}
+
+.chip-count {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding: 0 7px;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.compare-chip:not(.active) .chip-count { background: rgba(255, 255, 255, 0.08); }
+
+.view-mode-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.view-mode-actions a { text-decoration: none; }
+
+.btn-small { font-size: 12px; padding: 7px 12px; }
 
 /* ------------------------------------------------------------
    LAYOUT
@@ -390,6 +440,14 @@ body {
     background: #fff;
     transform: translateX(17px);
 }
+
+.backup-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.backup-btns .btn { justify-content: center; }
 
 .hint-box {
     margin-top: 16px;

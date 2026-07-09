@@ -6,6 +6,12 @@ const isViewMode = compressedCode !== null;
 let obtainedSprites = [];
 let masteredSprites = [];
 
+// In view mode, obtainedSprites/masteredSprites hold THEIR collection;
+// myObtained/myMastered hold the visitor's own (for comparison).
+let myObtained = [];
+let myMastered = [];
+let compareFilter = 'theirs'; // 'theirs' | 'need' (they have, I don't) | 'have' (I have, they don't)
+
 if (isViewMode) {
     document.body.classList.add('viewing-shared-collection');
     if (typeof baseSprites !== 'undefined') {
@@ -13,7 +19,9 @@ if (isViewMode) {
         obtainedSprites = decoded.obtained;
         masteredSprites = decoded.mastered;
     }
-    document.getElementById('viewModeBanner').style.display = 'block';
+    myObtained = JSON.parse(localStorage.getItem('fn_obtained_sprites')) || [];
+    myMastered = JSON.parse(localStorage.getItem('fn_mastered_sprites')) || [];
+    document.getElementById('viewModeBanner').style.display = 'flex';
 } else {
     obtainedSprites = JSON.parse(localStorage.getItem('fn_obtained_sprites')) || [];
     masteredSprites = JSON.parse(localStorage.getItem('fn_mastered_sprites')) || [];
@@ -130,6 +138,93 @@ lowFidelitySwitch.addEventListener('change', () => {
     renderGrid(); // card backgrounds switch between gradient and flat color
 });
 
+// COLLECTION COMPARATOR + IMPORT (view mode only)
+if (isViewMode) {
+    // Backup buttons manage the visitor's own data — hide while viewing someone else's
+    document.getElementById('backupHeader').style.display = 'none';
+    document.getElementById('backupBtns').style.display = 'none';
+
+    const released = baseSprites.filter(s => !s.unreleased);
+    const counts = {
+        theirs: released.filter(s => obtainedSprites.includes(s.id)).length,
+        need: released.filter(s => obtainedSprites.includes(s.id) && !myObtained.includes(s.id)).length,
+        have: released.filter(s => myObtained.includes(s.id) && !obtainedSprites.includes(s.id)).length,
+    };
+    document.getElementById('cmp-count-theirs').textContent = counts.theirs;
+    document.getElementById('cmp-count-need').textContent = counts.need;
+    document.getElementById('cmp-count-have').textContent = counts.have;
+
+    document.querySelectorAll('.compare-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            compareFilter = chip.dataset.cmp;
+            document.querySelectorAll('.compare-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            renderGrid();
+        });
+    });
+
+    document.getElementById('importSharedBtn').addEventListener('click', () => {
+        const msg = `This will REPLACE your own collection with this shared one `
+            + `(${counts.theirs} collected, ${masteredSprites.length} mastered). Continue?`;
+        if (!confirm(msg)) return;
+        localStorage.setItem('fn_obtained_sprites', JSON.stringify(obtainedSprites));
+        localStorage.setItem('fn_mastered_sprites', JSON.stringify(masteredSprites));
+        window.location.href = 'index.html';
+    });
+}
+
+// BACKUP EXPORT / IMPORT (own collection)
+if (!isViewMode) {
+    const backupFileInput = document.getElementById('backupFileInput');
+
+    document.getElementById('backupExportBtn').addEventListener('click', () => {
+        const payload = {
+            app: 'fnsprites',
+            version: 1,
+            exportedAt: new Date().toISOString(),
+            obtained: obtainedSprites,
+            mastered: masteredSprites,
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `fnsprites-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    });
+
+    document.getElementById('backupImportBtn').addEventListener('click', () => backupFileInput.click());
+
+    backupFileInput.addEventListener('change', () => {
+        const file = backupFileInput.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            try {
+                const data = JSON.parse(reader.result);
+                if (!Array.isArray(data.obtained) || !Array.isArray(data.mastered)) throw new Error('bad format');
+                const known = new Set(baseSprites.map(s => s.id));
+                const nextObtained = data.obtained.filter(id => known.has(id));
+                const nextMastered = data.mastered.filter(id => known.has(id) && nextObtained.includes(id));
+                if (!confirm(`Replace your current collection with this backup? (${nextObtained.length} collected, ${nextMastered.length} mastered)`)) {
+                    backupFileInput.value = '';
+                    return;
+                }
+                obtainedSprites = nextObtained;
+                masteredSprites = nextMastered;
+                localStorage.setItem('fn_obtained_sprites', JSON.stringify(obtainedSprites));
+                localStorage.setItem('fn_mastered_sprites', JSON.stringify(masteredSprites));
+                renderGrid();
+                alert('Backup imported!');
+            } catch (e) {
+                alert('Invalid backup file.');
+            }
+            backupFileInput.value = '';
+        };
+        reader.readAsText(file);
+    });
+}
+
 // EXPORT DROPDOWN MENU
 const exportDropdown = document.getElementById('exportDropdown');
 const exportMenuBtn = document.getElementById('exportMenuBtn');
@@ -229,9 +324,19 @@ function buildCardHTML(sprite, isObtained, isMastered) {
     `;
 }
 
+// In view mode the "THEY'RE MISSING" tab shows the visitor's own sprites,
+// so card state must come from their collection instead of the shared one.
+function activeCollections() {
+    if (isViewMode && compareFilter === 'have') {
+        return { obtained: myObtained, mastered: myMastered };
+    }
+    return { obtained: obtainedSprites, mastered: masteredSprites };
+}
+
 function createCardElement(sprite) {
-    const isObtained = obtainedSprites.includes(sprite.id);
-    const isMastered = masteredSprites.includes(sprite.id);
+    const state = activeCollections();
+    const isObtained = state.obtained.includes(sprite.id);
+    const isMastered = state.mastered.includes(sprite.id);
 
     const card = document.createElement('div');
     card.dataset.id = sprite.id;
@@ -259,10 +364,18 @@ function createCardElement(sprite) {
 }
 
 function spritePassesFilters(sprite) {
-    const isObtained = obtainedSprites.includes(sprite.id);
-    const isMastered = masteredSprites.includes(sprite.id);
+    const state = activeCollections();
+    const isObtained = state.obtained.includes(sprite.id);
+    const isMastered = state.mastered.includes(sprite.id);
 
-    if (isViewMode && (!isObtained || sprite.unreleased)) return false;
+    if (isViewMode) {
+        if (sprite.unreleased) return false;
+        const theyHave = obtainedSprites.includes(sprite.id);
+        const iHave = myObtained.includes(sprite.id);
+        if (compareFilter === 'theirs' && !theyHave) return false;
+        if (compareFilter === 'need' && !(theyHave && !iHave)) return false;
+        if (compareFilter === 'have' && !(iHave && !theyHave)) return false;
+    }
     if (!isViewMode && !unreleasedSwitch.checked && sprite.unreleased) return false;
     if (hideMasteredSwitch.checked && isMastered) return false;
 
@@ -304,8 +417,9 @@ function renderGrid() {
             const themeSprites = visibleSprites.filter(s => s.theme === themeKey);
             if (themeSprites.length === 0) return;
 
-            const ownedCount = themeSprites.filter(s => obtainedSprites.includes(s.id)).length;
-            const masteredCount = themeSprites.filter(s => masteredSprites.includes(s.id)).length;
+            const state = activeCollections();
+            const ownedCount = themeSprites.filter(s => state.obtained.includes(s.id)).length;
+            const masteredCount = themeSprites.filter(s => state.mastered.includes(s.id)).length;
             const masteredLabel = masteredCount > 0
                 ? `<span class="theme-section-mastered">👑 ${masteredCount === themeSprites.length ? 'ALL MASTERED' : masteredCount + ' mastered'}</span>`
                 : '';

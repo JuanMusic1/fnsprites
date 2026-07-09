@@ -1,0 +1,31 @@
+name: Validate sprite data
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate data sheet vs sprite images
+        run: node scripts/validate-data.js
+
+      - name: Check share-link order is preserved
+        run: |
+          BASE="${{ github.event.pull_request.base.sha || github.event.before }}"
+          if [ -n "$BASE" ] && git cat-file -e "$BASE:sprites-data.js" 2>/dev/null; then
+            git show "$BASE:sprites-data.js" > /tmp/old-sprites-data.js
+            node scripts/validate-data.js --check-order /tmp/old-sprites-data.js
+          else
+            echo "No previous version of sprites-data.js found — skipping order check"
+          fi

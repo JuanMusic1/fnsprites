@@ -11,7 +11,10 @@ Track your Fortnite sprite collection across two states: **obtained** and **mast
 
 - **Live progress bars** — collection + mastery counters in the header.
 - **Filters** — search box, filter by theme, owned/unowned toggle, hide mastered, group by theme, show unreleased, low fidelity mode.
-- **Share** — encodes your whole collection into a URL (`?c=...`). Opening it shows a read-only, collected-only view.
+- **Share** — encodes your whole collection into a URL (`?c=...`). Opening it shows a read-only view.
+- **Collection comparator** — when viewing a shared link, tabs show what they have that you're missing and vice versa (great for trades).
+- **Import shared collection** — one click adopts a shared collection as your own (handy for syncing between devices).
+- **Backup / restore** — export your collection as a JSON file and import it back anytime.
 - **Image export** — generate images of missing / full collection / unmastered / mastered sprites.
 - Progress saved in `localStorage` (no account, no server).
 
@@ -34,6 +37,9 @@ Plain HTML/CSS/JS. No build step, no dependencies. Hosted on GitHub Pages.
 | `styles.css` | Styling (theme/rarity colors come from `sprites-data.js`) |
 | `sprites/` | Sprite images, named `{base}_{theme}.png` |
 | `siteimages/` | Site assets (mascot, icons) |
+| `scripts/validate-data.js` | CI validator — data vs images, share-link order protection |
+
+CI (GitHub Actions) validates every push/PR: each sprite has its image, no orphan images, valid themes/rarities, and that existing sprites keep their list positions (protects old share links). Run locally with `node scripts/validate-data.js`.
 
 ## Adding a new sprite / character
 

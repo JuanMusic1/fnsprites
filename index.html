@@ -70,8 +70,16 @@
 </header>
 
 <div class="view-mode-banner" id="viewModeBanner" style="display: none;">
-    👀 Viewing a shared collection — only collected items are shown.
-    <a href="index.html">Go to my personal tracker</a>
+    <div class="view-mode-text">👀 Viewing a shared collection</div>
+    <div class="compare-chips">
+        <button class="compare-chip active" data-cmp="theirs">THEIR SPRITES <span class="chip-count" id="cmp-count-theirs"></span></button>
+        <button class="compare-chip" data-cmp="need">I'M MISSING <span class="chip-count" id="cmp-count-need"></span></button>
+        <button class="compare-chip" data-cmp="have">THEY'RE MISSING <span class="chip-count" id="cmp-count-have"></span></button>
+    </div>
+    <div class="view-mode-actions">
+        <button class="btn btn-primary btn-small" id="importSharedBtn">📥 IMPORT AS MINE</button>
+        <a href="index.html" class="btn btn-ghost btn-small">MY TRACKER</a>
+    </div>
 </div>
 
 <div class="container">
@@ -111,6 +119,13 @@
                     <span class="switch-label">Low fidelity mode</span>
                     <input type="checkbox" id="low-fidelity-switch" class="switch-input">
                 </label>
+
+                <div class="filter-header" id="backupHeader">Backup</div>
+                <div class="backup-btns" id="backupBtns">
+                    <button class="btn btn-ghost btn-small" id="backupExportBtn" title="Download your collection as a JSON file">⬇ Export</button>
+                    <button class="btn btn-ghost btn-small" id="backupImportBtn" title="Restore a collection from a backup file">⬆ Import</button>
+                    <input type="file" id="backupFileInput" accept=".json,application/json" hidden>
+                </div>
 
                 <div class="hint-box">
                     💡 Click a card to collect it. Hit the 👑 on a collected card to master it.
