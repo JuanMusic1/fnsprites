@@ -16,6 +16,8 @@ Track your Fortnite sprite collection across two states: **obtained** and **mast
 - **Import shared collection** — one click adopts a shared collection as your own (handy for syncing between devices).
 - **Backup / restore** — export your collection as a JSON file and import it back anytime.
 - **Image export** — generate images of missing / full collection / unmastered / mastered sprites.
+- **Stats panel** — collection & mastery percentages, next milestone, and per-theme / per-rarity breakdowns.
+- **NEW badges** — sprites with a recent `addedOn` date show a NEW ribbon for 14 days (auto-expires).
 - Progress saved in `localStorage` (no account, no server).
 
 ## Themes

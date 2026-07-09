@@ -40,6 +40,19 @@ characters.forEach(ch => {
     if (!validRarities.has(ch.rarity)) {
         errors.push(`character "${ch.base}": unknown rarity "${ch.rarity}" (valid: ${[...validRarities].join(', ')})`);
     }
+    if (ch.addedOn) {
+        const dates = typeof ch.addedOn === 'string'
+            ? [['(character)', ch.addedOn]]
+            : Object.entries(ch.addedOn);
+        dates.forEach(([key, value]) => {
+            if (key !== '(character)' && key !== 'default' && !validThemes.has(key)) {
+                errors.push(`character "${ch.base}": addedOn references unknown theme "${key}"`);
+            }
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || isNaN(Date.parse(value))) {
+                errors.push(`character "${ch.base}": addedOn["${key}"] has invalid date "${value}" (expected YYYY-MM-DD)`);
+            }
+        });
+    }
     const seen = new Set();
     [...(ch.themes || []), ...(ch.unreleased || [])].forEach(theme => {
         if (!validThemes.has(theme)) {

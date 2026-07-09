@@ -247,6 +247,113 @@ document.querySelectorAll('.dropdown-item[data-export]').forEach(item => {
     });
 });
 
+// "NEW" badge: released sprites added within the last NEW_BADGE_DAYS days
+function isNewSprite(sprite) {
+    if (!sprite.addedOn || sprite.unreleased) return false;
+    const age = Date.now() - Date.parse(sprite.addedOn);
+    return age >= 0 && age < NEW_BADGE_DAYS * 24 * 60 * 60 * 1000;
+}
+
+// STATS MODAL
+const statsModal = document.getElementById('statsModal');
+const statsContent = document.getElementById('statsContent');
+
+function nextMilestone(count, total) {
+    for (const pct of [25, 50, 75, 100]) {
+        const target = Math.ceil(total * pct / 100);
+        if (count < target) return { pct, remaining: target - count };
+    }
+    return null;
+}
+
+function statsRowHTML(label, collected, mastered, total) {
+    const colPct = total > 0 ? (collected / total) * 100 : 0;
+    const masPct = total > 0 ? (mastered / total) * 100 : 0;
+    return `
+        <div class="stats-row">
+            <span class="stats-row-label">${label}</span>
+            <div class="stats-row-bar">
+                <div class="stats-row-fill collected-fill" style="width:${colPct}%"></div>
+                <div class="stats-row-fill mastery-fill" style="width:${masPct}%"></div>
+            </div>
+            <span class="stats-row-nums">${collected}/${total}${mastered > 0 ? ` · 👑${mastered}` : ''}</span>
+        </div>`;
+}
+
+function renderStats() {
+    const released = baseSprites.filter(s => !s.unreleased);
+    const total = released.length;
+    const collected = released.filter(s => obtainedSprites.includes(s.id)).length;
+    const mastered = released.filter(s => masteredSprites.includes(s.id)).length;
+    const colPct = total > 0 ? Math.round((collected / total) * 100) : 0;
+    const masPct = total > 0 ? Math.round((mastered / total) * 100) : 0;
+
+    let milestoneHTML = '';
+    const colMilestone = nextMilestone(collected, total);
+    if (colMilestone) {
+        milestoneHTML = `<div class="stats-milestone">🎯 <b>${colMilestone.remaining}</b> more sprite${colMilestone.remaining === 1 ? '' : 's'} to reach <b>${colMilestone.pct}%</b> collection</div>`;
+    } else {
+        const masMilestone = nextMilestone(mastered, total);
+        milestoneHTML = masMilestone
+            ? `<div class="stats-milestone">🏆 Collection complete! 👑 <b>${masMilestone.remaining}</b> more to <b>${masMilestone.pct}%</b> mastery</div>`
+            : `<div class="stats-milestone">🏆 100% collected & mastered. Nothing left — go touch grass! 🌱</div>`;
+    }
+
+    const newCount = released.filter(isNewSprite).length;
+    const newHTML = newCount > 0
+        ? `<div class="stats-milestone stats-new">🆕 ${newCount} sprite${newCount === 1 ? '' : 's'} recently added</div>`
+        : '';
+
+    const themeRows = THEME_ORDER.map(themeKey => {
+        const themeReleased = released.filter(s => s.theme === themeKey);
+        if (themeReleased.length === 0) return '';
+        return statsRowHTML(
+            THEME_CONFIG[themeKey].label,
+            themeReleased.filter(s => obtainedSprites.includes(s.id)).length,
+            themeReleased.filter(s => masteredSprites.includes(s.id)).length,
+            themeReleased.length
+        );
+    }).join('');
+
+    const rarityRows = Object.keys(RARITY_CONFIG).map(rarity => {
+        const rarityReleased = released.filter(s => s.rarity === rarity);
+        if (rarityReleased.length === 0) return '';
+        return statsRowHTML(
+            rarity.toUpperCase(),
+            rarityReleased.filter(s => obtainedSprites.includes(s.id)).length,
+            rarityReleased.filter(s => masteredSprites.includes(s.id)).length,
+            rarityReleased.length
+        );
+    }).join('');
+
+    statsContent.innerHTML = `
+        <div class="stats-hero">
+            <div class="stats-hero-item">
+                <div class="stats-hero-pct" style="color:var(--collected)">${colPct}%</div>
+                <div class="stats-hero-label">COLLECTED · ${collected}/${total}</div>
+            </div>
+            <div class="stats-hero-item">
+                <div class="stats-hero-pct" style="color:var(--mastered)">${masPct}%</div>
+                <div class="stats-hero-label">MASTERED · ${mastered}/${total}</div>
+            </div>
+        </div>
+        ${milestoneHTML}
+        ${newHTML}
+        <div class="stats-section-title">BY THEME</div>
+        ${themeRows}
+        <div class="stats-section-title">BY RARITY</div>
+        ${rarityRows}
+    `;
+}
+
+document.getElementById('statsBtn').addEventListener('click', () => {
+    renderStats();
+    statsModal.style.display = 'flex';
+});
+document.getElementById('statsCloseBtn').addEventListener('click', () => { statsModal.style.display = 'none'; });
+statsModal.addEventListener('click', (e) => { if (e.target === statsModal) statsModal.style.display = 'none'; });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') statsModal.style.display = 'none'; });
+
 // COLOR HELPERS — resolve card colors from the data-sheet configs
 function getCardColors(sprite) {
     const themeCfg = THEME_CONFIG[sprite.theme] || THEME_CONFIG.Basic;
@@ -290,7 +397,9 @@ function buildCardHTML(sprite, isObtained, isMastered) {
         ? colors.bg[0]
         : `linear-gradient(180deg, ${colors.bg[0]} 0%, ${colors.bg[1]} 100%)`;
 
-    const unreleasedBadge = sprite.unreleased ? `<div class="status-badge unreleased">UNRELEASED</div>` : '';
+    let cornerBadge = '';
+    if (sprite.unreleased) cornerBadge = `<div class="status-badge unreleased">UNRELEASED</div>`;
+    else if (isNewSprite(sprite)) cornerBadge = `<div class="status-badge new-badge">NEW</div>`;
 
     let stateBadge = '';
     if (isMastered) {
@@ -312,7 +421,7 @@ function buildCardHTML(sprite, isObtained, isMastered) {
     const rarityBadge = `<div class="fortnite-rarity-tag" style="background:${tagBg};color:${colors.text}">${sprite.rarity === 'Mythic' ? 'MYTHIC' : sprite.rarity}</div>`;
 
     return `
-        ${unreleasedBadge}
+        ${cornerBadge}
         ${stateBadge}
         ${crownHTML}
         <div class="card-inner-display" style="background:${bgStyle}">
@@ -506,10 +615,27 @@ function spawnMasteryBurst(cardElement) {
     setTimeout(() => burst.remove(), 1000);
 }
 
-shareBtn.addEventListener('click', () => {
+shareBtn.addEventListener('click', async () => {
     if (typeof baseSprites === 'undefined') return;
     const compressionCodeString = compressCollection(baseSprites, obtainedSprites, masteredSprites);
     const shareURL = `${window.location.origin}${window.location.pathname}?c=${compressionCodeString}`;
+
+    // On touch devices, open the native share sheet (Discord, WhatsApp, etc.).
+    // Desktop keeps copy-to-clipboard — faster than a share dialog there.
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+    if (navigator.share && isTouchDevice) {
+        try {
+            await navigator.share({
+                title: 'Fortnite Sprites Tracker',
+                text: 'Check out my Fortnite sprite collection!',
+                url: shareURL,
+            });
+            return;
+        } catch (e) {
+            if (e.name === 'AbortError') return; // user closed the share sheet
+            // otherwise fall through to clipboard
+        }
+    }
 
     const copied = () => alert("Share link copied!");
     const failed = () => window.prompt("Copy your share link:", shareURL);

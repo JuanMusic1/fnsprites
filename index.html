@@ -53,6 +53,7 @@
         </div>
 
         <div class="topbar-actions">
+            <button class="btn btn-ghost" id="statsBtn" title="Collection statistics">📊 STATS</button>
             <div class="dropdown" id="exportDropdown">
                 <button class="btn btn-ghost" id="exportMenuBtn" aria-haspopup="true" aria-expanded="false" title="Generate a shareable image of your sprites">
                     📸 GENERATE IMAGE <span class="caret">▾</span>
@@ -149,6 +150,16 @@
         </aside>
 
         <main id="spriteGrid" class="grid-area"></main>
+    </div>
+</div>
+
+<div class="modal-overlay" id="statsModal" style="display: none;">
+    <div class="modal-box" role="dialog" aria-label="Collection statistics">
+        <div class="modal-header">
+            <span class="modal-title">📊 COLLECTION STATS</span>
+            <button class="modal-close-btn" id="statsCloseBtn" title="Close">✕</button>
+        </div>
+        <div class="modal-content" id="statsContent"></div>
     </div>
 </div>
 
