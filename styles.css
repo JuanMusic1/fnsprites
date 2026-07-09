@@ -305,6 +305,9 @@ body {
 .creator-link:hover { border-color: #ff0000; }
 .creator-img { width: 100%; height: auto; display: block; }
 .creator-subtext { font-size: 13px; color: #a0aec0; margin-top: 10px; line-height: 1.4; font-weight: 500; }
+.modified-by { font-size: 12px; color: #6b7280; margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); font-weight: 500; }
+.modified-by a { color: var(--fn-yellow); text-decoration: none; font-weight: 700; }
+.modified-by a:hover { text-decoration: underline; }
 
 .sub-btn {
     display: inline-block;

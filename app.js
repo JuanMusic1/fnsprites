@@ -299,7 +299,15 @@ shareBtn.addEventListener('click', () => {
     if (typeof baseSprites === 'undefined') return;
     const compressionCodeString = compressCollection(baseSprites, obtainedSprites, masteredSprites);
     const shareURL = `${window.location.origin}${window.location.pathname}?c=${compressionCodeString}`;
-    navigator.clipboard.writeText(shareURL).then(() => { alert("Share link copied!"); });
+
+    const copied = () => alert("Share link copied!");
+    const failed = () => window.prompt("Copy your share link:", shareURL);
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareURL).then(copied).catch(failed);
+    } else {
+        failed();
+    }
 });
 
 // ==========================================
@@ -378,10 +386,20 @@ function exportCanvasImage(mode) {
     canvas.height = topBarHeight + (rows * (cardH + padding) + padding) + footerLinkHeight + (borderThickness * 2);
     
     const mascotImg = new Image();
+
+    // Wait for both the webfont (Oswald) and the mascot before drawing,
+    // otherwise canvas text measures/renders with a fallback font.
+    const mascotReady = new Promise(resolve => {
+        mascotImg.onload = resolve;
+        mascotImg.onerror = resolve;
+    });
     mascotImg.src = 'siteimages/staticsprite.png';
-    
-    mascotImg.onload = () => { processRenderChain(); };
-    mascotImg.onerror = () => { processRenderChain(); };
+
+    const fontsReady = document.fonts && document.fonts.ready
+        ? document.fonts.ready
+        : Promise.resolve();
+
+    Promise.all([fontsReady, mascotReady]).then(() => { processRenderChain(); });
 
     function processRenderChain() {
         ctx.fillStyle = titleColor;
