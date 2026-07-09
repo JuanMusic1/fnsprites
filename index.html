@@ -6,7 +6,7 @@
     <title>Fortnite Sprite Tracker</title>
 
     <meta name="description" content="Track and share your Fortnite sprite collection. Mark sprites as collected or mastered, filter by theme, and export collection images.">
-    <meta name="theme-color" content="#0b0d13">
+    <meta name="theme-color" content="#0a0c11">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Fortnite Sprites Tracker">
@@ -19,104 +19,109 @@
     <meta name="twitter:image" content="siteimages/staticsprite.png">
 
     <link rel="icon" type="image/png" href="siteimages/staticsprite.png">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="styles.css">
-    
+
     <script src="sprites-data.js" defer></script>
     <script src="share-utils.js" defer></script>
     <script src="app.js" defer></script>
 </head>
 <body>
 
-<div class="container">
-    <header class="fn-navbar">
-        <div class="brand-container">
-            <img src="siteimages/staticsprite.png" alt="Mascot" class="brand-mascot">
-            <div class="brand-title">FORTNITE SPRITES TRACKER</div>
+<header class="topbar">
+    <div class="topbar-inner">
+        <a class="brand" href="index.html">
+            <img src="siteimages/staticsprite.png" alt="" class="brand-mascot">
+            <span class="brand-title">SPRITES <em>TRACKER</em></span>
+        </a>
+
+        <div class="topbar-stats">
+            <div class="stat-pill" title="Collection progress">
+                <span class="stat-label">COLLECTED</span>
+                <span class="stat-value" id="live-counter-ratio">0 / 0</span>
+                <div class="stat-bar"><div class="stat-bar-fill collected-fill" id="live-counter-bar"></div></div>
+            </div>
+            <div class="stat-pill" title="Mastery progress">
+                <span class="stat-label">MASTERED</span>
+                <span class="stat-value" id="mastery-counter-ratio">0 / 0</span>
+                <div class="stat-bar"><div class="stat-bar-fill mastery-fill" id="mastery-counter-bar"></div></div>
+            </div>
         </div>
-        <div class="nav-controls-right">
-            <div class="progress-wrapper">
-                <div class="live-progress-box">
-                    <div class="live-progress-text">COLLECTION PROGRESS: <span id="live-counter-ratio">0 / 0</span></div>
-                    <div class="live-progress-bar-bg">
-                        <div class="live-progress-bar-fill" id="live-counter-bar"></div>
-                    </div>
-                </div>
-                <div class="live-progress-box">
-                    <div class="live-progress-text">MASTERY PROGRESS: <span id="mastery-counter-ratio">0 / 0</span></div>
-                    <div class="live-progress-bar-bg">
-                        <div class="live-progress-bar-fill mastery-fill" id="mastery-counter-bar"></div>
-                    </div>
+
+        <div class="topbar-actions">
+            <div class="dropdown" id="exportDropdown">
+                <button class="btn btn-ghost" id="exportMenuBtn" aria-haspopup="true" aria-expanded="false">
+                    📸 EXPORT <span class="caret">▾</span>
+                </button>
+                <div class="dropdown-menu" id="exportMenu" role="menu">
+                    <button class="dropdown-item" data-export="collected"><span class="dot dot-green"></span> My collection</button>
+                    <button class="dropdown-item" data-export="missing"><span class="dot dot-red"></span> Missing sprites</button>
+                    <button class="dropdown-item" data-export="mastered"><span class="dot dot-gold"></span> Mastered sprites</button>
+                    <button class="dropdown-item" data-export="unmastered"><span class="dot dot-cyan"></span> Unmastered sprites</button>
                 </div>
             </div>
-            <button class="missing-image-btn" id="missingImageBtn">GENERATE MISSING SPRITES IMAGE</button>
-            <button class="image-btn" id="imageBtn">GENERATE COLLECTION IMAGE</button>
-            <button class="unmastered-image-btn" id="unmasteredImageBtn">GENERATE UNMASTERED SPRITES IMAGE</button>
-            <button class="mastered-image-btn" id="masteredImageBtn">GENERATE MASTERED SPRITES IMAGE</button>
-            <button class="share-btn" id="shareBtn">SHARE COLLECTION</button>
+            <button class="btn btn-primary" id="shareBtn">🔗 SHARE</button>
         </div>
-    </header>
-
-    <div class="view-mode-banner" id="viewModeBanner" style="display: none;">
-        👀 VIEWING A SHARED COLLECTION. ITEMS ARE FILTERED TO SHOW COLLECTED ONLY.
-        <a href="index.html">GO TO MY PERSONAL TRACKER</a>
     </div>
+</header>
 
+<div class="view-mode-banner" id="viewModeBanner" style="display: none;">
+    👀 Viewing a shared collection — only collected items are shown.
+    <a href="index.html">Go to my personal tracker</a>
+</div>
+
+<div class="container">
     <div class="app-layout">
-        <div class="sidebar">
-            <aside class="panel-box">
-                <div class="filter-header">SEARCH BOX</div>
-                <input type="text" id="search" class="fn-input" placeholder="Type to search...">
-                
-                <div class="filter-header">FILTER BY THEME</div>
+        <aside class="sidebar">
+            <div class="panel-box">
+                <label class="filter-header" for="search">Search</label>
+                <input type="text" id="search" class="fn-input" placeholder="Search sprites…" autocomplete="off">
+
+                <label class="filter-header" for="theme-filter">Theme</label>
                 <select id="theme-filter" class="fn-select">
                     <option value="all">ALL THEMES</option>
-                    <option value="Basic">BASIC</option>
-                    <option value="Gold">GOLD</option>
-                    <option value="Candy">GUMMY</option>
-                    <option value="Galaxy">GALAXY</option>
-                    <option value="Gem">GEM</option>
-                    <option value="Holofoil">HOLOFOIL</option>
-                    <option value="Rift">RIFT</option>
+                    <!-- options generated from THEME_CONFIG by app.js -->
                 </select>
 
-				<div class="filter-header">COLLECTION PROGRESS</div>
-				<div class="toggle-container">
-					<button class="toggle-btn active" id="toggle-all">ALL</button>
-					<button class="toggle-btn" id="toggle-owned">OWNED</button>
-					<button class="toggle-btn" id="toggle-unowned">UNOWNED</button>
-				</div>
+                <div class="filter-header">Status</div>
+                <div class="toggle-container">
+                    <button class="toggle-btn" id="toggle-all">ALL</button>
+                    <button class="toggle-btn" id="toggle-owned">OWNED</button>
+                    <button class="toggle-btn" id="toggle-unowned">MISSING</button>
+                </div>
 
-				<div class="switch-row">
-					<span class="switch-label">HIDE MASTERED SPRITES</span>
-					<input type="checkbox" id="hide-mastered-switch" class="switch-input">
-				</div>
-
-				<div class="switch-row">
-					<span class="switch-label">GROUP BY THEME</span>
-					<input type="checkbox" id="group-theme-switch" class="switch-input">
-				</div>
-
-                <div class="switch-row">
-                    <span class="switch-label">SHOW UNRELEASED</span>
+                <div class="filter-header">Options</div>
+                <label class="switch-row">
+                    <span class="switch-label">Hide mastered</span>
+                    <input type="checkbox" id="hide-mastered-switch" class="switch-input">
+                </label>
+                <label class="switch-row">
+                    <span class="switch-label">Group by theme</span>
+                    <input type="checkbox" id="group-theme-switch" class="switch-input">
+                </label>
+                <label class="switch-row">
+                    <span class="switch-label">Show unreleased</span>
                     <input type="checkbox" id="unreleased-switch" class="switch-input">
-                </div>
-
-                <div class="switch-row">
-                    <span class="switch-label">LOW FIDELITY MODE</span>
+                </label>
+                <label class="switch-row">
+                    <span class="switch-label">Low fidelity mode</span>
                     <input type="checkbox" id="low-fidelity-switch" class="switch-input">
+                </label>
+
+                <div class="hint-box">
+                    💡 Click a card to collect it. Hit the 👑 on a collected card to master it.
                 </div>
-            </aside>
+            </div>
 
             <div class="panel-box creator-card">
-                <button class="close-creator-btn" id="closeCreatorBtn" title="Hide for this session">❌</button>
+                <button class="close-creator-btn" id="closeCreatorBtn" title="Hide for this session">✕</button>
                 <div class="creator-title">Made by Rick</div>
                 <a href="https://youtube.com/@rickventure" class="creator-link" target="_blank">
-                    <img src="siteimages/rickpfpeak.png" class="creator-img" alt="Rickventure Channel" onerror="this.src='siteimages/rickpfpeak.png'">
+                    <img src="siteimages/rickpfpeak.png" class="creator-img" alt="Rickventure Channel">
                 </a>
                 <a href="https://youtube.com/@rickventure?sub_confirmation=1" class="sub-btn" target="_blank">sub 2 me</a>
                 <div class="creator-subtext">
@@ -126,9 +131,9 @@
                     Modified by <a href="https://github.com/JuanMusic1" target="_blank" rel="noopener">JuanMusic1</a>
                 </div>
             </div>
-        </div>
+        </aside>
 
-        <main class="sprite-grid" id="spriteGrid"></main>
+        <main id="spriteGrid" class="grid-area"></main>
     </div>
 </div>
 

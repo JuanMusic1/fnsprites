@@ -1,119 +1,91 @@
-// DEVELOPER DATA SHEET: Add new sprites, change rarities, or toggle unreleased states here.
-const baseSprites = [
-    { id: "water_basic", name: "Water", theme: "Basic", rarity: "Rare", unreleased: false },
-    { id: "water_gold", name: "Gold Water", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "water_candy", name: "Gummy Water", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "water_galaxy", name: "Galaxy Water", theme: "Galaxy", rarity: "Special", unreleased: false },
-    { id: "water_gem", name: "Gem Water", theme: "Gem", rarity: "Special", unreleased: true },
-    { id: "water_holofoil", name: "Holofoil Water", theme: "Holofoil", rarity: "Special", unreleased: true },
-    
-    { id: "earth_basic", name: "Earth", theme: "Basic", rarity: "Rare", unreleased: false },
-    { id: "earth_gold", name: "Gold Earth", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "earth_candy", name: "Gummy Earth", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "earth_galaxy", name: "Galaxy Earth", theme: "Galaxy", rarity: "Special", unreleased: false },
-    { id: "earth_gem", name: "Gem Earth", theme: "Gem", rarity: "Special", unreleased: true },
-    
-    { id: "fire_basic", name: "Fire", theme: "Basic", rarity: "Rare", unreleased: false },
-    { id: "fire_gold", name: "Gold Fire", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "fire_candy", name: "Gummy Fire", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "fire_galaxy", name: "Galaxy Fire", theme: "Galaxy", rarity: "Special", unreleased: false },
-    { id: "fire_holofoil", name: "Holofoil Fire", theme: "Holofoil", rarity: "Special", unreleased: true },
+// ============================================================
+// SPRITE DATA SHEET — everything an admin needs lives here.
+//
+// HOW TO ADD A NEW SPRITE / CHARACTER:
+//   1. Drop the PNGs in /sprites named "<base>_<theme>.png"
+//      (e.g. sprites/wick_gold.png)
+//   2. Add ONE entry at the END of the `characters` list below:
+//        { base: 'wick', name: 'John Wick', rarity: 'Mythic',
+//          themes: ['Basic'], unreleased: ['Gold'] }
+//      - themes:     released variants
+//      - unreleased: variants that exist but aren't in-game yet
+//   3. Done. Filters, grouping, colors and image export pick it
+//      up automatically.
+//
+//   ⚠ ALWAYS APPEND new characters at the END of the list.
+//     Share links encode the collection by position — reordering
+//     or inserting in the middle breaks previously shared links.
+//
+// HOW TO ADD A NEW THEME:
+//   Add one entry to THEME_CONFIG. label = filter dropdown text,
+//   prefix = display name prefix ("Gold" -> "Gold Water"),
+//   bg = [top, bottom] card gradient colors.
+// ============================================================
 
-    { id: "duck_basic", name: "Duck", theme: "Basic", rarity: "Epic", unreleased: false },
-    { id: "duck_gold", name: "Gold Duck", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "duck_candy", name: "Gummy Duck", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "duck_galaxy", name: "Galaxy Duck", theme: "Galaxy", rarity: "Special", unreleased: false },
-    { id: "duck_gem", name: "Gem Duck", theme: "Gem", rarity: "Special", unreleased: true },
-	
-    { id: "ghost_basic", name: "Ghost", theme: "Basic", rarity: "Epic", unreleased: false },
-    { id: "ghost_gold", name: "Gold Ghost", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "ghost_candy", name: "Gummy Ghost", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "ghost_galaxy", name: "Galaxy Ghost", theme: "Galaxy", rarity: "Special", unreleased: false },
-    { id: "ghost_holofoil", name: "Holofoil Ghost", theme: "Holofoil", rarity: "Special", unreleased: true },
-	
-    { id: "dream_basic", name: "Dream", theme: "Basic", rarity: "Legendary", unreleased: false },
-    { id: "dream_gold", name: "Gold Dream", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "dream_candy", name: "Gummy Dream", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "dream_galaxy", name: "Galaxy Dream", theme: "Galaxy", rarity: "Special", unreleased: false },
-    { id: "dream_rift", name: "Rift Dream", theme: "Rift", rarity: "Special", unreleased: true },
-	
-    { id: "demon_basic", name: "Demon", theme: "Basic", rarity: "Epic", unreleased: false },
-    { id: "demon_gold", name: "Gold Demon", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "demon_candy", name: "Gummy Demon", theme: "Candy", rarity: "Special", unreleased: false },
-	{ id: "demon_galaxy", name: "Galaxy Demon", theme: "Galaxy", rarity: "Special", unreleased: false },
-    { id: "demon_gem", name: "Gem Demon", theme: "Gem", rarity: "Special", unreleased: true },
+const THEME_CONFIG = {
+    Basic:    { label: 'BASIC',    prefix: '',         bg: ['#1c2436', '#0c0f17'] },
+    Gold:     { label: 'GOLD',     prefix: 'Gold',     bg: ['#61460b', '#241a02'] },
+    Candy:    { label: 'GUMMY',    prefix: 'Gummy',    bg: ['#6b183f', '#260514'] },
+    Galaxy:   { label: 'GALAXY',   prefix: 'Galaxy',   bg: ['#1f1145', '#080314'] },
+    Gem:      { label: 'GEM',      prefix: 'Gem',      bg: ['#114c47', '#041a18'] },
+    Holofoil: { label: 'HOLOFOIL', prefix: 'Holofoil', bg: ['#204454', '#09171f'] },
+    Rift:     { label: 'RIFT',     prefix: 'Rift',     bg: ['#154b5e', '#04161c'] },
+};
 
-	{ id: "punk_basic", name: "Punk", theme: "Basic", rarity: "Legendary", unreleased: false },
-    { id: "punk_gold", name: "Gold Punk", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "punk_candy", name: "Gummy Punk", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "punk_galaxy", name: "Galaxy Punk", theme: "Galaxy", rarity: "Special", unreleased: false },
-    { id: "punk_gem", name: "Gem Punk", theme: "Gem", rarity: "Special", unreleased: true },
-    { id: "punk_rift", name: "Rift Punk", theme: "Rift", rarity: "Special", unreleased: true },
+const THEME_ORDER = Object.keys(THEME_CONFIG);
 
-	{ id: "king_basic", name: "King", theme: "Basic", rarity: "Epic", unreleased: false },
-    { id: "king_gold", name: "Gold King", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "king_candy", name: "Gummy King", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "king_galaxy", name: "Galaxy King", theme: "Galaxy", rarity: "Special", unreleased: false },
-    { id: "king_holofoil", name: "Holofoil King", theme: "Holofoil", rarity: "Special", unreleased: true },
+// tag/text = rarity badge colors. bg = card gradient (Special uses the theme's bg instead).
+const RARITY_CONFIG = {
+    Rare:      { bg: ['#104273', '#081a35'], tag: '#004A8E', text: '#00FFFB' },
+    Epic:      { bg: ['#4d1566', '#1e052c'], tag: '#511D7F', text: '#ED2BFF' },
+    Legendary: { bg: ['#743e0a', '#301702'], tag: '#8E4122', text: '#FBC568' },
+    Mythic:    { bg: ['#70531c', '#2e2107'], tag: '#80622A', text: '#FFF1A9' },
+    Special:   { bg: null,                   tag: '#51f7cc', text: '#000000' },
+};
 
-    { id: "zeropoint_basic", name: "Zero Point", theme: "Basic", rarity: "Mythic", unreleased: false },
-    { id: "zeropoint_gold", name: "Gold Zero Point", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "zeropoint_candy", name: "Gummy Zero Point", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "zeropoint_galaxy", name: "Galaxy Zero Point", theme: "Galaxy", rarity: "Special", unreleased: false },
-    { id: "zeropoint_gem", name: "Gem Zero Point", theme: "Gem", rarity: "Special", unreleased: true },
-    { id: "zeropoint_holofoil", name: "Quack Zero Point", theme: "Holofoil", rarity: "Special", unreleased: true },
-	
-    { id: "theburntpeanut_basic", name: "Burnt Peanut", theme: "Basic", rarity: "Mythic", unreleased: false },
-	
-    { id: "fishy_basic", name: "Fishy", theme: "Basic", rarity: "Rare", unreleased: false },
-    { id: "fishy_gold", name: "Gold Fishy", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "fishy_candy", name: "Gummy Fishy", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "fishy_galaxy", name: "Galaxy Fishy", theme: "Galaxy", rarity: "Special", unreleased: false },
-	//	{ id: "fishy_gem", name: "Gem Fishy", theme: "Gem", rarity: "Special", unreleased: true },
-	//	{ id: "fishy_holofoil", name: "Holofoil Fishy", theme: "Holofoil", rarity: "Special", unreleased: true },
-
-    { id: "striker_basic", name: "Striker", theme: "Basic", rarity: "Epic", unreleased: false },
-    { id: "striker_gold", name: "Gold Striker", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "striker_candy", name: "Gummy Striker", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "striker_galaxy", name: "Galaxy Striker", theme: "Galaxy", rarity: "Special", unreleased: false },
-    //	{ id: "striker_gem", name: "Gem Striker", theme: "Gem", rarity: "Special", unreleased: true },
-    { id: "striker_holofoil", name: "Holofoil Striker", theme: "Holofoil", rarity: "Special", unreleased: true },
-
-    { id: "aura_basic", name: "Aura", theme: "Basic", rarity: "Epic", unreleased: false },
-    { id: "aura_gold", name: "Gold Aura", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "aura_candy", name: "Gummy Aura", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "aura_galaxy", name: "Galaxy Aura", theme: "Galaxy", rarity: "Special", unreleased: false },
-    { id: "aura_gem", name: "Gem Aura", theme: "Gem", rarity: "Special", unreleased: true },
-	//	{ id: "aura_holofoil", name: "Holofoil Aura", theme: "Holofoil", rarity: "Special", unreleased: true },
-
-    { id: "boss_basic", name: "Boss", theme: "Basic", rarity: "Legendary", unreleased: false },
-    { id: "boss_gold", name: "Gold Boss", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "boss_candy", name: "Gummy Boss", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "boss_galaxy", name: "Galaxy Boss", theme: "Galaxy", rarity: "Special", unreleased: false },
-	//	{ id: "boss_gem", name: "Gem Boss", theme: "Gem", rarity: "Special", unreleased: true },
-	//	{ id: "boss_holofoil", name: "Holofoil Boss", theme: "Holofoil", rarity: "Special", unreleased: true },
-
-    { id: "grim_basic", name: "Grim", theme: "Basic", rarity: "Mythic", unreleased: false },
-    { id: "grim_gold", name: "Gold Grim", theme: "Gold", rarity: "Special", unreleased: false },
-    { id: "grim_candy", name: "Gummy Grim", theme: "Candy", rarity: "Special", unreleased: false },
-    { id: "grim_galaxy", name: "Galaxy Grim", theme: "Galaxy", rarity: "Special", unreleased: false },
-	//	{ id: "grim_gem", name: "Gem Grim", theme: "Gem", rarity: "Special", unreleased: true },
-	//	{ id: "grim_holofoil", name: "Holofoil Grim", theme: "Holofoil", rarity: "Special", unreleased: true },
-
-    { id: "air_basic", name: "Air", theme: "Basic", rarity: "Rare", unreleased: true },
-    { id: "air_gold", name: "Gold Air", theme: "Gold", rarity: "Special", unreleased: true },
-    { id: "air_candy", name: "Gummy Air", theme: "Candy", rarity: "Special", unreleased: true },
-    { id: "air_galaxy", name: "Galaxy Air", theme: "Galaxy", rarity: "Special", unreleased: true },
-	//	{ id: "air_gem", name: "Gem Air", theme: "Gem", rarity: "Special", unreleased: true },
-    { id: "air_holofoil", name: "Holofoil Air", theme: "Holofoil", rarity: "Special", unreleased: true },
-	
-    { id: "seven_basic", name: "Seven", theme: "Basic", rarity: "Legendary", unreleased: true },
-    { id: "seven_gold", name: "Gold Seven", theme: "Gold", rarity: "Special", unreleased: true },
-    { id: "seven_candy", name: "Gummy Seven", theme: "Candy", rarity: "Special", unreleased: true },
-    { id: "seven_galaxy", name: "Galaxy Seven", theme: "Galaxy", rarity: "Special", unreleased: true },
-	//	{ id: "seven_gem", name: "Gem Seven", theme: "Gem", rarity: "Special", unreleased: true },
-    { id: "seven_holofoil", name: "Holofoil Seven", theme: "Holofoil", rarity: "Special", unreleased: true },
-
-	{ id: "wick_basic", name: "John Wick", theme: "Basic", rarity: "Mythic", unreleased: true },
-
+// One entry per character. `names` optionally overrides the
+// auto-generated display name for a specific theme.
+const characters = [
+    { base: 'water',          name: 'Water',        rarity: 'Rare',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem', 'Holofoil'] },
+    { base: 'earth',          name: 'Earth',        rarity: 'Rare',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem'] },
+    { base: 'fire',           name: 'Fire',         rarity: 'Rare',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Holofoil'] },
+    { base: 'duck',           name: 'Duck',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem'] },
+    { base: 'ghost',          name: 'Ghost',        rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Holofoil'] },
+    { base: 'dream',          name: 'Dream',        rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Rift'] },
+    { base: 'demon',          name: 'Demon',        rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem'] },
+    { base: 'punk',           name: 'Punk',         rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem', 'Rift'] },
+    { base: 'king',           name: 'King',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Holofoil'] },
+    { base: 'zeropoint',      name: 'Zero Point',   rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem', 'Holofoil'], names: { Holofoil: 'Quack Zero Point' } },
+    { base: 'theburntpeanut', name: 'Burnt Peanut', rarity: 'Mythic',    themes: ['Basic'] },
+    { base: 'fishy',          name: 'Fishy',        rarity: 'Rare',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'] },
+    { base: 'striker',        name: 'Striker',      rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Holofoil'] },
+    { base: 'aura',           name: 'Aura',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem'] },
+    { base: 'boss',           name: 'Boss',         rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy'] },
+    { base: 'grim',           name: 'Grim',         rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Candy', 'Galaxy'] },
+    { base: 'air',            name: 'Air',          rarity: 'Rare',      themes: [], unreleased: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'] },
+    { base: 'seven',          name: 'Seven',        rarity: 'Legendary', themes: [], unreleased: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'] },
+    { base: 'wick',           name: 'John Wick',    rarity: 'Mythic',    themes: [], unreleased: ['Basic'] },
 ];
+
+// ------------------------------------------------------------
+// Derived flat list — do not edit below this line.
+// Expands each character into its variants in canonical theme
+// order, preserving the id/position layout share links rely on.
+// ------------------------------------------------------------
+const baseSprites = characters.flatMap(ch => {
+    const released = ch.themes || [];
+    const unreleased = ch.unreleased || [];
+    return THEME_ORDER
+        .filter(theme => released.includes(theme) || unreleased.includes(theme))
+        .map(theme => {
+            const prefix = THEME_CONFIG[theme].prefix;
+            const autoName = prefix ? `${prefix} ${ch.name}` : ch.name;
+            return {
+                id: `${ch.base}_${theme.toLowerCase()}`,
+                name: (ch.names && ch.names[theme]) || autoName,
+                theme: theme,
+                rarity: theme === 'Basic' ? ch.rarity : 'Special',
+                unreleased: unreleased.includes(theme),
+            };
+        });
+});
