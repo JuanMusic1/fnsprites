@@ -72,9 +72,21 @@ const characters = [
     { base: 'aura',           name: 'Aura',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem'] },
     { base: 'boss',           name: 'Boss',         rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy'] },
     { base: 'grim',           name: 'Grim',         rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Candy', 'Galaxy'] },
-    { base: 'air',            name: 'Air',          rarity: 'Rare',      themes: [], unreleased: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'] },
-    { base: 'seven',          name: 'Seven',        rarity: 'Legendary', themes: [], unreleased: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'] },
+    { base: 'air',            name: 'Air',          rarity: 'Rare',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], addedOn: '2026-07-19' },
+    { base: 'seven',          name: 'Seven',        rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], addedOn: '2026-07-19' },
     { base: 'wick',           name: 'John Wick',    rarity: 'Mythic',    themes: [], unreleased: ['Basic'] },
+
+    // --- Synced 2026-07-19 from upstream (staticvacant/fnsprites) ---
+    // Rift variants of existing characters live as separate entries so the
+    // original entries keep their list positions (protects old share links).
+    { base: 'batman',         name: 'Batman',       rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], unreleased: ['Rift'], addedOn: '2026-07-19' },
+    { base: 'pollo',          name: 'Pollo',        rarity: 'Mythic',    themes: ['Basic'], addedOn: '2026-07-19' },
+    { base: 'vini',           name: 'Vini Jr.',     rarity: 'Mythic',    themes: ['Basic'], addedOn: '2026-07-19' },
+    { base: 'earth',          name: 'Earth',        rarity: 'Rare',      themes: [], unreleased: ['Rift'] },
+    { base: 'fire',           name: 'Fire',         rarity: 'Rare',      themes: [], unreleased: ['Rift'] },
+    { base: 'fishy',          name: 'Fishy',        rarity: 'Rare',      themes: [], unreleased: ['Rift'] },
+    { base: 'boss',           name: 'Boss',         rarity: 'Legendary', themes: [], unreleased: ['Rift'] },
+    { base: 'grim',           name: 'Grim',         rarity: 'Mythic',    themes: [], unreleased: ['Rift'] },
 ];
 
 // ------------------------------------------------------------
