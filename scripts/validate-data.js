@@ -27,6 +27,8 @@ function loadData(file) {
     return ctx;
 }
 
+const ID_MIGRATIONS = require(path.join(root, 'id-migrations.js'));
+
 const errors = [];
 const warnings = [];
 
@@ -95,15 +97,23 @@ if (orderFlagIndex !== -1) {
         process.exit(1);
     }
     const oldIds = loadData(oldFile).baseSprites.map(s => s.id);
+    let renames = 0;
     oldIds.forEach((id, i) => {
         if (ids[i] !== id) {
+            if (ID_MIGRATIONS[id] === ids[i]) {
+                renames++; // allowed: same position, id renamed, covered by ID_MIGRATIONS
+                return;
+            }
             errors.push(
                 `share-link order broken at index ${i}: was "${id}", now "${ids[i] || '(removed)'}". ` +
-                `Existing sprites must keep their position — append new ones at the END of the characters list.`
+                `Existing sprites must keep their position — append new ones at the END of the characters list. ` +
+                `If this is an intentional id rename, add it to id-migrations.js instead.`
             );
         }
     });
-    if (errors.length === 0) console.log(`order check: ${oldIds.length} existing sprites keep their positions ✓`);
+    if (errors.length === 0) {
+        console.log(`order check: ${oldIds.length} existing sprites keep their positions` + (renames ? ` (${renames} allowed renames via id-migrations.js)` : '') + ' ✓');
+    }
 }
 
 // --- Report

@@ -3,6 +3,12 @@ const urlParams = new URLSearchParams(window.location.search);
 const compressedCode = urlParams.get('c');
 const isViewMode = compressedCode !== null;
 
+// ID_MIGRATIONS comes from id-migrations.js — keeps existing local
+// collections intact when a sprite id is renamed.
+function migrateIds(ids) {
+    return ids.map(id => ID_MIGRATIONS[id] || id);
+}
+
 let obtainedSprites = [];
 let masteredSprites = [];
 
@@ -19,12 +25,14 @@ if (isViewMode) {
         obtainedSprites = decoded.obtained;
         masteredSprites = decoded.mastered;
     }
-    myObtained = JSON.parse(localStorage.getItem('fn_obtained_sprites')) || [];
-    myMastered = JSON.parse(localStorage.getItem('fn_mastered_sprites')) || [];
+    myObtained = migrateIds(JSON.parse(localStorage.getItem('fn_obtained_sprites')) || []);
+    myMastered = migrateIds(JSON.parse(localStorage.getItem('fn_mastered_sprites')) || []);
     document.getElementById('viewModeBanner').style.display = 'flex';
 } else {
-    obtainedSprites = JSON.parse(localStorage.getItem('fn_obtained_sprites')) || [];
-    masteredSprites = JSON.parse(localStorage.getItem('fn_mastered_sprites')) || [];
+    obtainedSprites = migrateIds(JSON.parse(localStorage.getItem('fn_obtained_sprites')) || []);
+    masteredSprites = migrateIds(JSON.parse(localStorage.getItem('fn_mastered_sprites')) || []);
+    localStorage.setItem('fn_obtained_sprites', JSON.stringify(obtainedSprites));
+    localStorage.setItem('fn_mastered_sprites', JSON.stringify(masteredSprites));
 }
 
 const spriteGrid = document.getElementById('spriteGrid');
