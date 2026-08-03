@@ -40,6 +40,7 @@ const THEME_CONFIG = {
     Gem:      { label: 'GEM',      prefix: 'Gem',      bg: ['#114c47', '#041a18'] },
     Holofoil: { label: 'HOLOFOIL', prefix: 'Holofoil', bg: ['#204454', '#09171f'] },
     Rift:     { label: 'RIFT',     prefix: 'Rift',     bg: ['#154b5e', '#04161c'] },
+    Quack:    { label: 'QUACK',    prefix: 'Quack',    bg: ['#7a6f1a', '#211d06'] },
 };
 
 const THEME_ORDER = Object.keys(THEME_CONFIG);
@@ -65,7 +66,7 @@ const characters = [
     { base: 'demon',          name: 'Demon',        rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem'] },
     { base: 'punk',           name: 'Punk',         rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem', 'Rift'] },
     { base: 'king',           name: 'King',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], addedOn: { Holofoil: '2026-07-09' } },
-    { base: 'zeropoint',      name: 'Zero Point',   rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem', 'Holofoil'], names: { Holofoil: 'Quack Zero Point' } },
+    { base: 'zeropoint',      name: 'Zero Point',   rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], unreleased: ['Gem'], addedOn: { Holofoil: '2026-07-30' } },
     { base: 'theburntpeanut', name: 'Burnt Peanut', rarity: 'Mythic',    themes: ['Basic'] },
     { base: 'fishy',          name: 'Fishy',        rarity: 'Rare',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'] },
     { base: 'striker',        name: 'Striker',      rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], addedOn: { Holofoil: '2026-07-09' } },
@@ -87,6 +88,22 @@ const characters = [
     { base: 'fishy',          name: 'Fishy',        rarity: 'Rare',      themes: [], unreleased: ['Rift'] },
     { base: 'boss',           name: 'Boss',         rarity: 'Legendary', themes: [], unreleased: ['Rift'] },
     { base: 'grim',           name: 'Grim',         rarity: 'Mythic',    themes: [], unreleased: ['Rift'] },
+
+    // --- Synced 2026-07-30 from upstream (staticvacant/fnsprites) ---
+    // New "Quack" theme (separate from Holofoil) plus new variants of
+    // existing characters — appended as their own entries per the
+    // append-only rule. Upstream relabeled the "Rift" theme to "Cube"
+    // for these, but we keep our existing "Rift" name/prefix so it
+    // stays consistent with earlier Rift sprites (dream_rift, etc.)
+    // and with the on-disk "_rift.png" filenames.
+    { base: 'water',          name: 'Water',        rarity: 'Rare',      themes: ['Quack'], addedOn: '2026-07-30' },
+    { base: 'earth',          name: 'Earth',        rarity: 'Rare',      themes: ['Quack'], addedOn: '2026-07-30' },
+    { base: 'fire',           name: 'Fire',         rarity: 'Rare',      themes: ['Quack'], addedOn: '2026-07-30' },
+    { base: 'zeropoint',      name: 'Zero Point',   rarity: 'Mythic',    themes: ['Quack', 'Rift'], addedOn: '2026-07-30' },
+    { base: 'grim',           name: 'Grim',         rarity: 'Mythic',    themes: ['Holofoil'], unreleased: ['Gem'], addedOn: '2026-07-30' },
+    { base: 'llama',          name: 'Llama',        rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Gem'], addedOn: '2026-07-30' },
+    { base: 'peely',          name: 'Peely',        rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], addedOn: '2026-07-30' },
+    { base: 'ironmouse',      name: 'Ironmouse',    rarity: 'Mythic',    themes: [], unreleased: ['Basic'], addedOn: '2026-07-30' },
 ];
 
 // ------------------------------------------------------------
