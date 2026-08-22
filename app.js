@@ -481,6 +481,8 @@ function createCardElement(sprite) {
 }
 
 function spritePassesFilters(sprite) {
+    if (sprite.removed) return false; // never shipped — hidden everywhere, incl. "show unreleased"
+
     const state = activeCollections();
     const isObtained = state.obtained.includes(sprite.id);
     const isMastered = state.mastered.includes(sprite.id);

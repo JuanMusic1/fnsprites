@@ -56,12 +56,12 @@ characters.forEach(ch => {
         });
     }
     const seen = new Set();
-    [...(ch.themes || []), ...(ch.unreleased || [])].forEach(theme => {
+    [...(ch.themes || []), ...(ch.unreleased || []), ...(ch.removed || [])].forEach(theme => {
         if (!validThemes.has(theme)) {
             errors.push(`character "${ch.base}": unknown theme "${theme}" (valid: ${[...validThemes].join(', ')})`);
         }
         if (seen.has(theme)) {
-            errors.push(`character "${ch.base}": theme "${theme}" listed in both themes and unreleased`);
+            errors.push(`character "${ch.base}": theme "${theme}" listed in more than one of themes/unreleased/removed`);
         }
         seen.add(theme);
     });
@@ -72,8 +72,8 @@ const ids = baseSprites.map(s => s.id);
 const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
 dupes.forEach(id => errors.push(`duplicate sprite id: ${id}`));
 
-// --- Every sprite has its image
-baseSprites.forEach(s => {
+// --- Every non-removed sprite has its image (removed ones never shipped one)
+baseSprites.filter(s => !s.removed).forEach(s => {
     if (!fs.existsSync(path.join(root, 'sprites', `${s.id}.png`))) {
         errors.push(`missing image: sprites/${s.id}.png (for "${s.name}")`);
     }

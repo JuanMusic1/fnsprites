@@ -16,6 +16,14 @@
 //     Share links encode the collection by position — reordering
 //     or inserting in the middle breaks previously shared links.
 //
+// CANCELING A SPRITE THAT NEVER SHIPPED:
+//   Never delete a themes/unreleased entry outright — that shifts
+//   the position of every sprite after it and breaks old share
+//   links. Instead move the theme into `removed`. It disappears
+//   from the site completely (hidden even with "show unreleased"),
+//   but its slot in the list stays reserved so nothing shifts.
+//     { base: 'punk', ..., unreleased: ['Rift'], removed: ['Gem'] }
+//
 // HOW TO ADD A NEW THEME:
 //   Add one entry to THEME_CONFIG. label = filter dropdown text,
 //   prefix = display name prefix ("Gold" -> "Gold Water"),
@@ -57,20 +65,20 @@ const RARITY_CONFIG = {
 // One entry per character. `names` optionally overrides the
 // auto-generated display name for a specific theme.
 const characters = [
-    { base: 'water',          name: 'Water',        rarity: 'Rare',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], unreleased: ['Gem'], addedOn: { Holofoil: '2026-07-09' } },
-    { base: 'earth',          name: 'Earth',        rarity: 'Rare',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem'] },
+    { base: 'water',          name: 'Water',        rarity: 'Rare',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil', 'Gem'], addedOn: { Holofoil: '2026-07-09', Gem: '2026-08-13' } },
+    { base: 'earth',          name: 'Earth',        rarity: 'Rare',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Gem'], addedOn: { Gem: '2026-08-13' } },
     { base: 'fire',           name: 'Fire',         rarity: 'Rare',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], addedOn: { Holofoil: '2026-07-09' } },
-    { base: 'duck',           name: 'Duck',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem'] },
+    { base: 'duck',           name: 'Duck',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Gem'], addedOn: { Gem: '2026-08-13' } },
     { base: 'ghost',          name: 'Ghost',        rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], addedOn: { Holofoil: '2026-07-09' } },
     { base: 'dream',          name: 'Dream',        rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Cube'] },
-    { base: 'demon',          name: 'Demon',        rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem'] },
-    { base: 'punk',           name: 'Punk',         rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Cube'], unreleased: ['Gem'] },
+    { base: 'demon',          name: 'Demon',        rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Gem'], addedOn: { Gem: '2026-08-13' } },
+    { base: 'punk',           name: 'Punk',         rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Cube'] },
     { base: 'king',           name: 'King',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], addedOn: { Holofoil: '2026-07-09' } },
-    { base: 'zeropoint',      name: 'Zero Point',   rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], unreleased: ['Gem'], addedOn: { Holofoil: '2026-07-30' } },
+    { base: 'zeropoint',      name: 'Zero Point',   rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil', 'Gem'], addedOn: { Holofoil: '2026-07-30', Gem: '2026-08-13' } },
     { base: 'theburntpeanut', name: 'Burnt Peanut', rarity: 'Mythic',    themes: ['Basic'] },
     { base: 'fishy',          name: 'Fishy',        rarity: 'Rare',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'] },
     { base: 'striker',        name: 'Striker',      rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], addedOn: { Holofoil: '2026-07-09' } },
-    { base: 'aura',           name: 'Aura',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy'], unreleased: ['Gem'] },
+    { base: 'aura',           name: 'Aura',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Gem'], addedOn: { Gem: '2026-08-13' } },
     { base: 'boss',           name: 'Boss',         rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy'] },
     { base: 'grim',           name: 'Grim',         rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Candy', 'Galaxy'] },
     { base: 'air',            name: 'Air',          rarity: 'Rare',      themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], addedOn: '2026-07-19' },
@@ -97,10 +105,10 @@ const characters = [
     { base: 'earth',          name: 'Earth',        rarity: 'Rare',      themes: ['Quack'], addedOn: '2026-07-30' },
     { base: 'fire',           name: 'Fire',         rarity: 'Rare',      themes: ['Quack'], addedOn: '2026-07-30' },
     { base: 'zeropoint',      name: 'Zero Point',   rarity: 'Mythic',    themes: ['Quack', 'Cube'], addedOn: '2026-07-30' },
-    { base: 'grim',           name: 'Grim',         rarity: 'Mythic',    themes: ['Holofoil'], unreleased: ['Gem'], addedOn: '2026-07-30' },
+    { base: 'grim',           name: 'Grim',         rarity: 'Mythic',    themes: ['Holofoil', 'Gem'], addedOn: { Holofoil: '2026-07-30', Gem: '2026-08-13' } },
     { base: 'llama',          name: 'Llama',        rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Gem'], addedOn: '2026-07-30' },
     { base: 'peely',          name: 'Peely',        rarity: 'Legendary', themes: ['Basic', 'Gold', 'Candy', 'Galaxy', 'Holofoil'], addedOn: '2026-07-30' },
-    { base: 'ironmouse',      name: 'Ironmouse',    rarity: 'Mythic',    themes: [], unreleased: ['Basic'], addedOn: '2026-07-30' },
+    { base: 'ironmouse',      name: 'Ironmouse',    rarity: 'Mythic',    themes: ['Basic'], addedOn: '2026-08-13' },
 ];
 
 // ------------------------------------------------------------
@@ -111,21 +119,24 @@ const characters = [
 const baseSprites = characters.flatMap(ch => {
     const released = ch.themes || [];
     const unreleased = ch.unreleased || [];
+    const removed = ch.removed || [];
     return THEME_ORDER
-        .filter(theme => released.includes(theme) || unreleased.includes(theme))
+        .filter(theme => released.includes(theme) || unreleased.includes(theme) || removed.includes(theme))
         .map(theme => {
             const prefix = THEME_CONFIG[theme].prefix;
             const autoName = prefix ? `${prefix} ${ch.name}` : ch.name;
             let addedOn = null;
             if (typeof ch.addedOn === 'string') addedOn = ch.addedOn;
             else if (ch.addedOn) addedOn = ch.addedOn[theme] || ch.addedOn.default || null;
+            const isRemoved = removed.includes(theme);
             return {
                 id: `${ch.base}_${theme.toLowerCase()}`,
                 name: (ch.names && ch.names[theme]) || autoName,
                 theme: theme,
                 rarity: theme === 'Basic' ? ch.rarity : 'Special',
-                unreleased: unreleased.includes(theme),
-                addedOn: addedOn,
+                unreleased: unreleased.includes(theme) || isRemoved,
+                removed: isRemoved,
+                addedOn: isRemoved ? null : addedOn,
             };
         });
 });
