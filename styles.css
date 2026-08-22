@@ -1103,11 +1103,20 @@ body.low-fidelity .sprite-card .card-inner-display::before { display: none; }
     .creator-card { order: 3; }
 
     .sprite-grid {
-        grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
-        gap: 9px;
+        /* Fixed 3 columns instead of auto-fill(minmax) — on many phone
+           widths auto-fill was rounding down to just 2 per row. */
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
     }
 
-    .card-title-footer { height: 30px; }
-    .crown-action-icon { bottom: 36px; width: 27px; height: 27px; font-size: 15px; }
-    .state-badge { width: 21px; height: 21px; font-size: 11px; }
+    .card-title-footer { height: 28px; font-size: 11px; }
+    .crown-action-icon { bottom: 32px; width: 24px; height: 24px; font-size: 13px; }
+    .state-badge { width: 19px; height: 19px; font-size: 10px; }
+    .fortnite-rarity-tag { font-size: 8px; padding: 1px 8px 1px 4px; }
+}
+
+@media (max-width: 380px) {
+    /* Very narrow phones: 3 columns still fit, just tighter gaps/padding. */
+    .sprite-grid { gap: 6px; }
+    .container { padding: 12px 8px 32px; }
 }
