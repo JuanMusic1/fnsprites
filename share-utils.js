@@ -1,13 +1,20 @@
-// Handles encoding and decoding collection progress into URL parameter keys
+// Handles encoding and decoding collection progress into URL parameter keys.
+//
+// Bit position comes from each sprite's `shareIndex` (assigned in
+// sprites-data.js from the frozen SHARE_INDEX_ORDER list), NOT from
+// where the sprite sits in the baseSprites array. This is what lets
+// sprites-data.js reorder/merge `characters` freely without ever
+// breaking an existing share link — see "SHARE-LINK SAFETY" there.
 function compressCollection(baseList, activeObtained, activeMastered) {
-    let bitString = '';
+    const totalSlots = baseList.reduce((max, s) => Math.max(max, s.shareIndex), -1) + 1;
+    const bits = new Array(totalSlots * 2).fill('0');
+
     baseList.forEach(sprite => {
-        bitString += activeObtained.includes(sprite.id) ? '1' : '0';
-    });
-    baseList.forEach(sprite => {
-        bitString += activeMastered.includes(sprite.id) ? '1' : '0';
+        if (activeObtained.includes(sprite.id)) bits[sprite.shareIndex] = '1';
+        if (activeMastered.includes(sprite.id)) bits[totalSlots + sprite.shareIndex] = '1';
     });
 
+    let bitString = bits.join('');
     while (bitString.length % 8 !== 0) bitString += '0';
 
     let byteArray = [];
@@ -34,13 +41,16 @@ function decompressCollection(baseList, compressedString) {
 
         let obtainedIds = [];
         let masteredIds = [];
-        const totalSprites = baseList.length;
+        const totalSlots = baseList.reduce((max, s) => Math.max(max, s.shareIndex), -1) + 1;
 
-        baseList.forEach((sprite, index) => {
-            if (bitString[index] === '1') {
+        baseList.forEach(sprite => {
+            // Bits beyond the encoded string's length read as undefined,
+            // which just fails the '1' check — old, shorter links still
+            // decode fine against a site that has grown since.
+            if (bitString[sprite.shareIndex] === '1') {
                 obtainedIds.push(sprite.id);
             }
-            if (bitString[index + totalSprites] === '1') {
+            if (bitString[totalSlots + sprite.shareIndex] === '1') {
                 masteredIds.push(sprite.id);
             }
         });

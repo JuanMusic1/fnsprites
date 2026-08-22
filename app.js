@@ -37,6 +37,8 @@ if (isViewMode) {
 
 const spriteGrid = document.getElementById('spriteGrid');
 const searchInput = document.getElementById('search');
+const seasonFilter = document.getElementById('season-filter');
+const seasonFilterLabel = document.getElementById('season-filter-label');
 const themeFilter = document.getElementById('theme-filter');
 const unreleasedSwitch = document.getElementById('unreleased-switch');
 const lowFidelitySwitch = document.getElementById('low-fidelity-switch');
@@ -62,9 +64,27 @@ THEME_ORDER.forEach(themeKey => {
     themeFilter.appendChild(opt);
 });
 
+// POPULATE SEASON FILTER FROM SEASON_CONFIG. The whole control stays
+// hidden while there's only one season — nothing to filter yet — and
+// appears on its own the moment a second season is added to the data.
+const hasMultipleSeasons = SEASON_ORDER.length > 1;
+if (hasMultipleSeasons) {
+    SEASON_ORDER.forEach(seasonKey => {
+        const opt = document.createElement('option');
+        opt.value = seasonKey;
+        opt.textContent = SEASON_CONFIG[seasonKey].label;
+        seasonFilter.appendChild(opt);
+    });
+} else {
+    seasonFilter.style.display = 'none';
+    seasonFilterLabel.style.display = 'none';
+}
+
 // RESTORE LAST SAVED STATES FROM LOCAL STORAGE
 if (!isViewMode) {
     searchInput.value = localStorage.getItem('fn_state_search') || '';
+    seasonFilter.value = localStorage.getItem('fn_state_season') || 'all';
+    if (!seasonFilter.value) seasonFilter.value = 'all'; // stored season no longer exists
     themeFilter.value = localStorage.getItem('fn_state_theme') || 'all';
     if (!themeFilter.value) themeFilter.value = 'all'; // stored theme no longer exists
     unreleasedSwitch.checked = localStorage.getItem('fn_state_unreleased') === 'true';
@@ -122,6 +142,10 @@ toggleUnowned.addEventListener('click', () => setStatusFilter('missing', toggleU
 // PERSISTENCE EVENT LISTENERS
 searchInput.addEventListener('input', () => {
     localStorage.setItem('fn_state_search', searchInput.value);
+    renderGrid();
+});
+seasonFilter.addEventListener('change', () => {
+    localStorage.setItem('fn_state_season', seasonFilter.value);
     renderGrid();
 });
 themeFilter.addEventListener('change', () => {
@@ -334,6 +358,22 @@ function renderStats() {
         );
     }).join('');
 
+    // Only shown once a second season exists — a single-season breakdown is redundant.
+    let seasonSection = '';
+    if (hasMultipleSeasons) {
+        const seasonRows = SEASON_ORDER.map(seasonKey => {
+            const seasonReleased = released.filter(s => s.season === seasonKey);
+            if (seasonReleased.length === 0) return '';
+            return statsRowHTML(
+                SEASON_CONFIG[seasonKey].short,
+                seasonReleased.filter(s => obtainedSprites.includes(s.id)).length,
+                seasonReleased.filter(s => masteredSprites.includes(s.id)).length,
+                seasonReleased.length
+            );
+        }).join('');
+        seasonSection = `<div class="stats-section-title">BY SEASON</div>${seasonRows}`;
+    }
+
     statsContent.innerHTML = `
         <div class="stats-hero">
             <div class="stats-hero-item">
@@ -347,6 +387,7 @@ function renderStats() {
         </div>
         ${milestoneHTML}
         ${newHTML}
+        ${seasonSection}
         <div class="stats-section-title">BY THEME</div>
         ${themeRows}
         <div class="stats-section-title">BY RARITY</div>
@@ -361,6 +402,15 @@ document.getElementById('statsBtn').addEventListener('click', () => {
 document.getElementById('statsCloseBtn').addEventListener('click', () => { statsModal.style.display = 'none'; });
 statsModal.addEventListener('click', (e) => { if (e.target === statsModal) statsModal.style.display = 'none'; });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') statsModal.style.display = 'none'; });
+
+// Images live under sprites/<season-folder>/<id>.webp — keeps the
+// directory organized by generation instead of one flat file list.
+// WebP (resized to 256x256, ~93% smaller than the original 512x512
+// PNGs) — universally supported by the browsers this site targets.
+function spriteImagePath(sprite) {
+    const folder = (SEASON_CONFIG[sprite.season] && SEASON_CONFIG[sprite.season].folder) || '';
+    return folder ? `sprites/${folder}/${sprite.id}.webp` : `sprites/${sprite.id}.webp`;
+}
 
 // COLOR HELPERS — resolve card colors from the data-sheet configs
 function getCardColors(sprite) {
@@ -409,20 +459,25 @@ function buildCardHTML(sprite, isObtained, isMastered) {
     if (sprite.unreleased) cornerBadge = `<div class="status-badge unreleased">UNRELEASED</div>`;
     else if (isNewSprite(sprite)) cornerBadge = `<div class="status-badge new-badge">NEW</div>`;
 
+    // Only rendered once a second season exists — keeps today's single-season UI clean.
+    const seasonBadge = hasMultipleSeasons
+        ? `<div class="season-badge" title="${SEASON_CONFIG[sprite.season].label}">${SEASON_CONFIG[sprite.season].short}</div>`
+        : '';
+
     let stateBadge = '';
     if (isMastered) {
-        stateBadge = `<div class="state-badge mastered" title="Mastered">👑</div>`;
+        stateBadge = `<div class="state-badge mastered" title="Mastered" aria-hidden="true">👑</div>`;
     } else if (isObtained) {
-        stateBadge = `<div class="state-badge collected" title="Collected">✓</div>`;
+        stateBadge = `<div class="state-badge collected" title="Collected" aria-hidden="true">✓</div>`;
     }
 
     let crownHTML = '';
     if (!isViewMode && isObtained) {
         const crownTitle = isMastered ? 'Unmaster this sprite' : 'Master this sprite';
-        crownHTML = `<div class="crown-action-icon" title="${crownTitle}">👑</div>`;
+        crownHTML = `<button type="button" class="crown-action-icon" title="${crownTitle}" aria-label="${crownTitle}">👑</button>`;
     }
 
-    const floatCrown = isMastered ? `<div class="rendered-head-crown">👑</div>` : '';
+    const floatCrown = isMastered ? `<div class="rendered-head-crown" aria-hidden="true">👑</div>` : '';
 
     const isSpecial = sprite.rarity === 'Special';
     const tagBg = isSpecial && !lowFid ? SPECIAL_TAG_CSS : colors.tag;
@@ -430,11 +485,12 @@ function buildCardHTML(sprite, isObtained, isMastered) {
 
     return `
         ${cornerBadge}
+        ${seasonBadge}
         ${stateBadge}
         ${crownHTML}
         <div class="card-inner-display" style="background:${bgStyle}">
             ${floatCrown}
-            <img src="sprites/${sprite.id}.png" class="sprite-img" alt="${sprite.name}" loading="lazy" onerror="this.src='https://placehold.co/150?text=Missing+File'">
+            <img src="${spriteImagePath(sprite)}" class="sprite-img" alt="${sprite.name}" loading="lazy" onerror="this.src='https://placehold.co/150?text=Missing+File'">
             ${rarityBadge}
         </div>
         <div class="card-title-footer"><span>${sprite.name}</span></div>
@@ -448,6 +504,16 @@ function activeCollections() {
         return { obtained: myObtained, mastered: myMastered };
     }
     return { obtained: obtainedSprites, mastered: masteredSprites };
+}
+
+// Screen-reader label describing a card's current state — the same
+// information conveyed visually via badges/borders/color.
+function cardAriaLabel(sprite, isObtained, isMastered) {
+    let status = 'not collected';
+    if (sprite.unreleased) status = 'unreleased';
+    else if (isMastered) status = 'mastered';
+    else if (isObtained) status = 'collected';
+    return `${sprite.name}, ${sprite.rarity}, ${status}`;
 }
 
 function createCardElement(sprite) {
@@ -464,6 +530,12 @@ function createCardElement(sprite) {
     card.innerHTML = buildCardHTML(sprite, isObtained, isMastered);
 
     if (!isViewMode) {
+        // Keyboard + screen-reader support: cards act as toggle buttons.
+        card.tabIndex = 0;
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-pressed', String(isObtained));
+        card.setAttribute('aria-label', cardAriaLabel(sprite, isObtained, isMastered));
+
         const crownIcon = card.querySelector('.crown-action-icon');
         if (crownIcon) {
             crownIcon.addEventListener('click', (e) => {
@@ -475,6 +547,15 @@ function createCardElement(sprite) {
         card.addEventListener('click', (e) => {
             e.preventDefault();
             toggleObtained(sprite.id);
+        });
+        card.addEventListener('keydown', (e) => {
+            // Ignore keydowns bubbling up from a nested control (the crown
+            // button) — only the card itself should respond to Enter/Space.
+            if (e.target !== card) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault(); // stop the page from scrolling on Space
+                toggleObtained(sprite.id);
+            }
         });
     }
     return card;
@@ -499,6 +580,7 @@ function spritePassesFilters(sprite) {
     if (hideMasteredSwitch.checked && isMastered) return false;
 
     if (!sprite.name.toLowerCase().includes(searchInput.value.toLowerCase())) return false;
+    if (seasonFilter.value !== 'all' && sprite.season !== seasonFilter.value) return false;
     if (themeFilter.value !== 'all' && sprite.theme !== themeFilter.value) return false;
 
     if (!isViewMode) {
@@ -569,6 +651,15 @@ function renderGrid() {
     adjustCardFontSizes();
 }
 
+// renderGrid() rebuilds every card from scratch, which would otherwise
+// throw a keyboard user's focus back to the top of the page after every
+// collect/master action. Re-find that same sprite's fresh card and
+// refocus it so tabbing/arrowing through the grid stays uninterrupted.
+function focusCardById(id) {
+    const card = spriteGrid.querySelector(`.sprite-card[data-id="${id}"]`);
+    if (card && card.hasAttribute('tabindex')) card.focus({ preventScroll: true });
+}
+
 function toggleObtained(id) {
     if (obtainedSprites.includes(id)) {
         obtainedSprites = obtainedSprites.filter(item => item !== id);
@@ -579,6 +670,7 @@ function toggleObtained(id) {
     localStorage.setItem('fn_obtained_sprites', JSON.stringify(obtainedSprites));
     localStorage.setItem('fn_mastered_sprites', JSON.stringify(masteredSprites));
     renderGrid();
+    focusCardById(id);
 }
 
 function toggleMastery(id, cardElement) {
@@ -597,6 +689,7 @@ function toggleMastery(id, cardElement) {
         const newCard = spriteGrid.querySelector(`.sprite-card[data-id="${id}"]`);
         if (newCard) newCard.classList.add('just-mastered');
     }
+    focusCardById(id);
 }
 
 // Gold particle burst fired from the center of the card being mastered
@@ -892,7 +985,7 @@ function exportCanvasImage(mode) {
         targetItems.forEach((sprite, index) => {
             const img = new Image();
             img.crossOrigin = 'anonymous';
-            img.src = `sprites/${sprite.id}.png`;
+            img.src = spriteImagePath(sprite);
 
             img.onload = () => {
                 const r = index % cols;
