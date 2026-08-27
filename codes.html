@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortnite Codes Tracker</title>
+
+    <meta name="description" content="Track redeemable Fortnite codes and their rewards — mark codes as redeemed and auto-collect their sprite rewards.">
+    <meta name="theme-color" content="#0a0c11">
+
+    <link rel="icon" type="image/png" href="siteimages/staticsprite.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+
+    <script src="sprites-data.js" defer></script>
+    <script src="codes-data.js" defer></script>
+    <script src="codes-app.js" defer></script>
+</head>
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+        <a class="brand" href="index.html">
+            <img src="siteimages/staticsprite.png" alt="" class="brand-mascot">
+            <span class="brand-title">SPRITES <em>TRACKER</em></span>
+        </a>
+
+        <div class="topbar-stats">
+            <div class="stat-pill" title="Codes redeemed">
+                <span class="stat-label">REDEEMED</span>
+                <span class="stat-value" id="codes-counter">0 / 0</span>
+            </div>
+        </div>
+
+        <div class="topbar-actions">
+            <a class="btn btn-ghost" href="index.html">← BACK TO TRACKER</a>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="codes-layout">
+        <aside class="panel-box codes-toolbar-box">
+            <div class="filter-header">Options</div>
+            <label class="switch-row">
+                <span class="switch-label">Hide redeemed</span>
+                <input type="checkbox" id="hideRedeemedToggle" class="switch-input">
+            </label>
+
+            <div class="filter-header">Bulk actions</div>
+            <div class="backup-btns">
+                <button type="button" class="btn btn-ghost btn-small" id="redeemAllBtn">✓ Redeem all</button>
+                <button type="button" class="btn btn-ghost btn-small" id="unredeemAllBtn">↺ Unredeem all</button>
+            </div>
+
+            <div class="hint-box">
+                💡 Click a code to copy it. Codes marked with 🧩 also mark that sprite as collected in your tracker when redeemed.
+            </div>
+        </aside>
+
+        <main class="codes-list" id="codesList"></main>
+    </div>
+</div>
+
+</body>
+</html>
