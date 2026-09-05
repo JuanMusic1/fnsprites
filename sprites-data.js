@@ -199,7 +199,7 @@ const characters = [
     { base: 'jonesy',      name: 'Jonesy',        rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
     { base: 'adventure',   name: 'Adventure',     rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
     { base: '8bit',        name: '8-Bit',         rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
-    { base: 'stormking',   name: 'Storm Scout',   rarity: 'Rare',      themes: [], unreleased: ['Basic', 'Gold', 'Cheat'], season: 'c7s4' },
+    { base: 'stormking',   name: 'Storm Scout',   rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-27' },
     { base: 'killswitch',  name: 'Killswitch',    rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
     { base: 'sonic',       name: 'Sonic',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
     { base: 'tails',       name: 'Tails',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
