@@ -211,7 +211,7 @@ const characters = [
     { base: 'pond',        name: 'Pond',          rarity: 'Mythic',    themes: [], unreleased: ['Basic'], season: 'c7s4' },
     { base: 'honey',       name: 'Honey',         rarity: 'Mythic',    themes: [], unreleased: ['Basic'], season: 'c7s4' },
     { base: 'dumpster',    name: 'Dumpster Dive', rarity: 'Mythic',    themes: [], unreleased: ['Basic'], season: 'c7s4' },
-    { base: 'bullet',      name: 'Bullet',        rarity: 'Mythic',    themes: [], unreleased: ['Basic'], season: 'c7s4' },
+    { base: 'bullet',      name: 'Bullet',        rarity: 'Mythic',    themes: [], removed: ['Basic'], season: 'c7s4' },
 ];
 
 // ------------------------------------------------------------

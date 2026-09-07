@@ -120,6 +120,7 @@ body {
     letter-spacing: 1.2px;
     color: var(--text-faint);
     display: inline-block;
+    white-space: nowrap;
 }
 
 .stat-value {

@@ -51,6 +51,8 @@ const liveRatio = document.getElementById('live-counter-ratio');
 const liveBarFill = document.getElementById('live-counter-bar');
 const masteryRatio = document.getElementById('mastery-counter-ratio');
 const masteryBarFill = document.getElementById('mastery-counter-bar');
+const liveStatLabel = document.getElementById('live-stat-label');
+const masteryStatLabel = document.getElementById('mastery-stat-label');
 
 // Rainbow used by "Special" rarity tags (CSS + canvas keep in sync here)
 const SPECIAL_TAG_STOPS = ['#51f7cc', '#e374ee', '#b5f69e'];
@@ -420,11 +422,28 @@ function getCardColors(sprite) {
     return { bg, tag: rarityCfg.tag, text: rarityCfg.text };
 }
 
+// Progress bars scope to the active season/theme filters (when set to
+// "all" they show the whole collection, same as before). Search, status
+// and hide-mastered are left out on purpose — those are view filters,
+// not "which slice of my collection" filters.
+function scopedReleasedSprites() {
+    const seasonValue = seasonFilter.value;
+    const themeValue = themeFilter.value;
+    return baseSprites.filter(sprite =>
+        !sprite.unreleased &&
+        (seasonValue === 'all' || sprite.season === seasonValue) &&
+        (themeValue === 'all' || sprite.theme === themeValue)
+    );
+}
+
 function updateCollectionCounter() {
     if (typeof baseSprites === 'undefined') return;
-    const totalReleased = baseSprites.filter(sprite => !sprite.unreleased).length;
-    const collectedReleased = baseSprites.filter(sprite => !sprite.unreleased && obtainedSprites.includes(sprite.id)).length;
-    const masteredReleased = baseSprites.filter(sprite => !sprite.unreleased && masteredSprites.includes(sprite.id)).length;
+    const seasonValue = seasonFilter.value;
+    const themeValue = themeFilter.value;
+    const scoped = scopedReleasedSprites();
+    const totalReleased = scoped.length;
+    const collectedReleased = scoped.filter(sprite => obtainedSprites.includes(sprite.id)).length;
+    const masteredReleased = scoped.filter(sprite => masteredSprites.includes(sprite.id)).length;
 
     liveRatio.textContent = `${collectedReleased} / ${totalReleased}`;
     const collectionPercentage = totalReleased > 0 ? (collectedReleased / totalReleased) * 100 : 0;
@@ -433,6 +452,14 @@ function updateCollectionCounter() {
     masteryRatio.textContent = `${masteredReleased} / ${totalReleased}`;
     const masteryPercentage = totalReleased > 0 ? (masteredReleased / totalReleased) * 100 : 0;
     masteryBarFill.style.width = `${masteryPercentage}%`;
+
+    // Let the label itself say what's being counted when a filter narrows it.
+    const scopeBits = [];
+    if (seasonValue !== 'all') scopeBits.push(SEASON_CONFIG[seasonValue].short);
+    if (themeValue !== 'all') scopeBits.push(THEME_CONFIG[themeValue].label);
+    const scopeSuffix = scopeBits.length ? ` · ${scopeBits.join(' · ')}` : '';
+    liveStatLabel.textContent = `COLLECTED${scopeSuffix}`;
+    masteryStatLabel.textContent = `MASTERED${scopeSuffix}`;
 }
 
 function adjustCardFontSizes() {
