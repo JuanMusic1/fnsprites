@@ -99,6 +99,7 @@ const THEME_CONFIG = {
     Cube:     { label: 'CUBE',     prefix: 'Cube',     bg: ['#154b5e', '#04161c'] },
     Quack:    { label: 'QUACK',    prefix: 'Quack',    bg: ['#7a6f1a', '#211d06'] },
     Cheat:    { label: 'CHEAT',    prefix: 'Cheat Master', bg: ['#0c3b3b', '#031616'] },
+    LootHacker: { label: 'LOOT HACKER', prefix: 'Loot Hacker', bg: ['#1a4d1a', '#04170a'] },
 };
 
 const THEME_ORDER = Object.keys(THEME_CONFIG);
@@ -195,23 +196,34 @@ const characters = [
     // "Cheat" is a new theme for this season (Basic/Gold/Cheat only, no
     // Candy/Galaxy/etc). Runners-era variant additions (duck/demon/king/punk)
     // seen in the same origin sync were intentionally skipped — not part of this batch.
-    { base: 'bush',        name: 'Bush',          rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
-    { base: 'jonesy',      name: 'Jonesy',        rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
-    { base: 'adventure',   name: 'Adventure',     rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
-    { base: '8bit',        name: '8-Bit',         rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
-    { base: 'stormking',   name: 'Storm Scout',   rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-27' },
-    { base: 'killswitch',  name: 'Killswitch',    rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
-    { base: 'sonic',       name: 'Sonic',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
-    { base: 'tails',       name: 'Tails',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
-    { base: 'shadow',      name: 'Shadow',        rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
-    { base: 'jackrabbit',  name: 'Jackrabbit',    rarity: 'Legendary', themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
-    { base: 'klombo',      name: 'Klombo',        rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
-    { base: 'crown',       name: 'Crown',         rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Cheat'], season: 'c7s4', addedOn: '2026-08-22' },
-    { base: 'xray',        name: 'X-Ray',         rarity: 'Mythic',    themes: [], unreleased: ['Basic'], season: 'c7s4' },
+    { base: 'bush',        name: 'Bush',          rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-08-22' },
+    { base: 'jonesy',      name: 'Jonesy',        rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-08-22' },
+    { base: 'adventure',   name: 'Adventure',     rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-08-22' },
+    { base: '8bit',        name: '8-Bit',         rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-08-22' },
+    { base: 'stormking',   name: 'Storm Scout',   rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-08-27' },
+    { base: 'killswitch',  name: 'Killswitch',    rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-08-22' },
+    { base: 'sonic',       name: 'Sonic',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-08-22' },
+    { base: 'tails',       name: 'Tails',         rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-08-22' },
+    { base: 'shadow',      name: 'Shadow',        rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-08-22' },
+    { base: 'jackrabbit',  name: 'Jackrabbit',    rarity: 'Legendary', themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-08-22' },
+    { base: 'klombo',      name: 'Klombo',        rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-08-22' },
+    { base: 'crown',       name: 'Crown',         rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-08-22' },
+    { base: 'xray',        name: 'X-Ray',         rarity: 'Mythic',    themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-09-03' },
     { base: 'pond',        name: 'Pond',          rarity: 'Mythic',    themes: [], unreleased: ['Basic'], season: 'c7s4' },
     { base: 'honey',       name: 'Honey',         rarity: 'Mythic',    themes: [], unreleased: ['Basic'], season: 'c7s4' },
     { base: 'dumpster',    name: 'Dumpster Dive', rarity: 'Mythic',    themes: [], unreleased: ['Basic'], season: 'c7s4' },
     { base: 'bullet',      name: 'Bullet',        rarity: 'Mythic',    themes: [], removed: ['Basic'], season: 'c7s4' },
+
+    // --- C7S4: Override — synced 2026-09-07 from ass-fnsprt ---
+    // New "LootHacker" theme (renamed from the source's "Hacker") — still
+    // datamined/unreleased everywhere it appears, including on Onigiri,
+    // Overshield and X-Ray below.
+    { base: 'onigiri',     name: 'Onigiri',       rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-09-03' },
+    { base: 'overshield',  name: 'Overshield',    rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-09-03' },
+    { base: 'battlepass',  name: 'Battle Pass',   rarity: 'Legendary', themes: [], unreleased: ['Basic'], season: 'c7s4' },
+    { base: 'bushranger',  name: 'Bushranger',    rarity: 'Legendary', themes: [], unreleased: ['Basic'], season: 'c7s4' },
+    { base: 'megaman',     name: 'Megaman',       rarity: 'Legendary', themes: ['Basic'], season: 'c7s4', addedOn: '2026-09-03' },
+    { base: 'victory',     name: 'Victory',       rarity: 'Legendary', themes: [], unreleased: ['Basic'], season: 'c7s4' },
 ];
 
 // ------------------------------------------------------------
