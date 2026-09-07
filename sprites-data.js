@@ -218,11 +218,11 @@ const characters = [
     // New "LootHacker" theme (renamed from the source's "Hacker") — still
     // datamined/unreleased everywhere it appears, including on Onigiri,
     // Overshield and X-Ray below.
-    { base: 'onigiri',     name: 'Onigiri',       rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-09-03' },
-    { base: 'overshield',  name: 'Overshield',    rarity: 'Epic',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-09-03' },
+    { base: 'onigiri',     name: 'Onigiri',       rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-09-03' },
+    { base: 'overshield',  name: 'Overshield',    rarity: 'Rare',      themes: ['Basic', 'Gold', 'Cheat'], unreleased: ['LootHacker'], season: 'c7s4', addedOn: '2026-09-03' },
     { base: 'battlepass',  name: 'Battle Pass',   rarity: 'Legendary', themes: [], unreleased: ['Basic'], season: 'c7s4' },
     { base: 'bushranger',  name: 'Bushranger',    rarity: 'Legendary', themes: [], unreleased: ['Basic'], season: 'c7s4' },
-    { base: 'megaman',     name: 'Megaman',       rarity: 'Legendary', themes: ['Basic'], season: 'c7s4', addedOn: '2026-09-03' },
+    { base: 'megaman',     name: 'Megaman',       rarity: 'Rare', themes: ['Basic'], season: 'c7s4', addedOn: '2026-09-03' },
     { base: 'victory',     name: 'Victory',       rarity: 'Legendary', themes: [], unreleased: ['Basic'], season: 'c7s4' },
 ];
 
